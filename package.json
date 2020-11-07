@@ -1,0 +1,29 @@
+{
+  "name": "goldfish",
+  "version": "1.0.0",
+  "description": "CS565 To-do List Final Project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bentotten/Goldfish.git"
+  },
+  "keywords": [
+    "react",
+    "to-do",
+    "list",
+    "jsx"
+  ],
+  "author": "Ben Totten, Josh McFerran, Tyde Hashimoto",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/bentotten/Goldfish/issues"
+  },
+  "homepage": "https://github.com/bentotten/Goldfish#readme",
+  "dependencies": {
+    "react": "^17.0.1",
+    "react-dom": "^17.0.1"
+  }
+}
