@@ -1,10 +1,20 @@
 import React from 'react';
 
-class todoItem extends React.Component {
+class TodoItem extends React.Component {
     render() {
-        return(<div>Hello from the to-do item component</div>);
+
+        const { todo } = this.props;
+
+        return(
+            <div onClick={this.toggleTodo}>{todo}</div>
+        );
+    }
+
+
+    toggleTodo = () => {
+        
     }
 
 }
 
-export default todoItem;
+export default TodoItem;

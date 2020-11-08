@@ -1,6 +1,9 @@
 import React from 'react';
+import TodoItem from '../TodoItem/TodoItem';
 
-class todoList extends React.Component {
+
+
+class TodoList extends React.Component {
     render() {
 
         const { todos } = this.props;
@@ -10,7 +13,7 @@ class todoList extends React.Component {
                 {
                     todos.map((_todo, _index) => {
                         return (
-                            <div key={_index}>{_todo}</div>
+                            <TodoItem key={_index} todo={_todo}> </TodoItem>
                         )
                     })
                 }
@@ -20,4 +23,4 @@ class todoList extends React.Component {
 
 }
 
-export default todoList;
+export default TodoList;
