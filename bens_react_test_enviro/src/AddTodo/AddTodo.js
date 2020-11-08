@@ -13,7 +13,7 @@ class AddTodo extends React.Component {
         return(
         <div className='addTodoContainer'>
             <form onSubmit={(e) => this.submitTodo(e)}>
-                <input onChange={(e) => this.updateInput(e)} type='text'></input>
+                <input id='addTodoInput' onChange={(e) => this.updateInput(e)} type='text'></input>
                 <button type='submit'>Add Task</button>
             </form>
         </div>);
@@ -21,12 +21,12 @@ class AddTodo extends React.Component {
 
     updateInput = (e) => {
         this.setState({ todo: e.target.value});
-        console.log(e);
     }
 
     submitTodo = (e) => {
         e.preventDefault();
-        console.log('submit', this.state);
+        this.props.addTodoFn(this.state.todo);
+        document.getElementById('addTodoInput').value = '';
     }
 
 }

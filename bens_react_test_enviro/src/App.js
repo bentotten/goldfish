@@ -22,11 +22,8 @@ class App extends React.Component {
     render() {
         return(
             <div>
-                <AddTodo></AddTodo>
-                {
-                    // Open and closed curly brace lets us use js inside of html
-                    2 + 2
-                }
+                <AddTodo addTodoFn={this.addTodo}></AddTodo>
+                <TodoList todos={this.state.todos}></TodoList>
             </div>
         );
     }
@@ -42,6 +39,13 @@ class App extends React.Component {
             console.log('No to-dos');
         }
     }
+
+    // Adds todos
+    addTodo = async (todo) => {
+        await this.setState({ todos: [...this.state.todos, todo]}); 
+        localStorage.setItem('todos', JSON.stringify(this.state.todos));
+        console.log(localStorage.getItem('todos'));
+    };
 
 }
 
