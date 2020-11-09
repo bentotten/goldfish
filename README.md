@@ -6,7 +6,7 @@ Full Stack WebApplication for Scheduling and To-do list
 
 Task object
 
-| Task |
+| Task | sub-obj | sub-obj |
 | --- | --- | --- |
 | name | | |
 | quad | | |
