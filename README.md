@@ -1,6 +1,6 @@
 # Goldfish
 
-Full Stack WebApplication for Scheduling and To-do list
+Final project for CS465/565: Full Stack WebApp for Scheduling and To-do lists. 
 
 ### Scheduling algorithm 
 
