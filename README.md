@@ -38,9 +38,10 @@ This is the actual task that will be saved and moved around within the webapp
 | location [obj]| name [string] | address [string] |
 | comment [string] | | |
 | complete [bool] | | |
-| subTask [Task obj] | | |  *Currently outside project scope
+| subTask [Task obj] | | |
 | user [int] | | |
 
+**Subtask is currently outside project scope
 
 ### Task List object
 
