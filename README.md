@@ -39,12 +39,19 @@ This is the actual task that will be saved and moved around within the webapp
 | subTask [obj] | | |
 
 name: Self-explainatory.
+
 quad: See Quadrant description below.
+
 prio: Short for priority; ranked 1 through 99 with 1 being the top priority for that quadrant.
+
 due: Date and time added here.
+
 location: Option for name of location and address.
+
 comment: Any addtional comment the user would like to attach to this task.
+
 complete: True/False.
+
 subTask: Task object that needs to be completed to complete this task. **MAY BE OUTSIDE THE SCOPE OF THIS CURRENT PROJECT VERSION
 
 ### Task List object
