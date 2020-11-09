@@ -3,9 +3,7 @@ import React, { Component } from 'react';
 // Task Class
 class Task extends React.Component {
     render() 
-        return(
-            <h1>Hello from the Task Component!</h1>;
-        );
+        return();   // Unsure if needed
 
         // Task Prototype
         Task.defaultProps = {
@@ -26,3 +24,33 @@ class Task extends React.Component {
 }
 
 export default Task;
+
+// Task Class
+class TaskList extends React.Component {
+    render() 
+        return();   // Unsure if needed
+
+        // Task Prototype
+        TaskList.defaultProps = {
+            // Required inputs
+            quad1 = [],
+            quad2 = [],
+            quad3 = [],
+            quad4 = []
+        }
+
+}
+
+export default TaskList;
+
+// Task Class
+class Daily extends React.Component {
+    render() 
+        return();   // Unsure if needed
+
+        // Task Prototype
+        Daily.defaultProps = []
+
+}
+
+export default Daily;
