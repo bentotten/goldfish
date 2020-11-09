@@ -2,7 +2,7 @@
 
 Final project for CS465/565: Full Stack WebApp for Scheduling and To-do lists.
 
-This webapp is currently hosted on Google Cloud at http://fullstack-project-goldfish.ipq.co/.
+This webapp is currently hosted on Google Cloud at http://fullstack-project-goldfish.ipq.co/ using N1: f1-micro.
 
 ### Scheduling algorithm 
 
