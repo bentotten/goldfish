@@ -60,10 +60,10 @@ This is the meta-list that stores, sorts, and is referenced for pulling the dail
 
 | Task List |
 | --- |
-| quad1 [array of Task objs []] |
-| quad2 [array of Task objs []] |
-| quad3 [array of Task objs []] |
-| quad4 [array of Task objs []] |
+| quad1 [array of Task objs [] ] |
+| quad2 [array of Task objs [] ] |
+| quad3 [array of Task objs [] ] |
+| quad4 [array of Task objs [] ] |
 
 ### Daily To-Do object
 
