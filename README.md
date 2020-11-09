@@ -2,8 +2,9 @@
 
 Full Stack WebApplication for Scheduling and To-do list
 
-## Scheduling algorithm 
+### Scheduling algorithm 
 
+At set time intervals, all priorities will decrease by 1 (yielding a higher priority task). This ensures quad 4 tasks eventually see the light of day. When a non-quad1 task reaches 0, it is moved into the next quadrant up. Every day, the top 5 tasks are pulled from the master list. Top 5 tasks first query and pull any quad1 tasks. If there are no more quad1 tasks, the remaining available slots are filled by quad2 and quad3 tasks (or quad4, if there are not enough quad2/3 tasks). 50% of the available slots will be filled by a quad2 task and 40% (rounded up) will be filled by quad3 tasks. Most quad4 tasks will only be completed through promotion to quad 2 or 3, not through assignment, unless the user has an abnormally empty schedule.
 
 ## Prototypes
 
