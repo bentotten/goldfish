@@ -8,9 +8,9 @@ Task object
 
 | Task |
 | --- | --- | --- |
-| name |
-| quad |
-| prio |
+| name | | |
+| quad | | |
+| prio | | |
 | due | date | time |
-| location |
-| comment |
+| location | | |
+| comment | | |
