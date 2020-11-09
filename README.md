@@ -60,10 +60,10 @@ This is the meta-list that stores, sorts, and is referenced for pulling the dail
 
 | Task List |
 | --- |
-| quad1 [1-99] |
-| quad2 [1-99] |
-| quad3 [1-99] |
-| quad4 [1-99] |
+| quad1 [[]Task objs] |
+| quad2 [[]Task objs] |
+| quad3 [[]Task objs] |
+| quad4 [[]Task objs] |
 
 ### Daily To-Do object
 
@@ -72,8 +72,8 @@ This is the daily list of to-dos pulled from the priority categories of the mast
 
 | Daily Todos |
 | --- |
-| item1 [string]|
-| item2 [string] |
-| item3 [string] |
-| item4 [string] |
-| item5 [string] |
+| item1 [Task obj]|
+| item2 [Task obj] |
+| item3 [Task obj] |
+| item4 [Task obj] |
+| item5 [Task obj] |
