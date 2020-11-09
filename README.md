@@ -39,6 +39,7 @@ This is the actual task that will be saved and moved around within the webapp
 | comment [string] | | |
 | complete [bool] | | |
 | subTask [obj] | | |
+| user [int] | | |
 
 name: Self-explainatory.
 
@@ -66,6 +67,7 @@ This is the meta-list that stores, sorts, and is referenced for pulling the dail
 | quad2 [array of Task objs [] ] |
 | quad3 [array of Task objs [] ] |
 | quad4 [array of Task objs [] ] |
+| user [int] |
 
 ### Daily To-Do object
 
@@ -79,3 +81,4 @@ This is the daily list of to-dos pulled from the priority categories of the mast
 | item3 [Task obj] |
 | item4 [Task obj] |
 | item5 [Task obj] |
+| user [int] | 
