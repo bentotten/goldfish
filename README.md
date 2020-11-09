@@ -1,6 +1,8 @@
 # Goldfish
 
-Final project for CS465/565: Full Stack WebApp for Scheduling and To-do lists. 
+Final project for CS465/565: Full Stack WebApp for Scheduling and To-do lists.
+
+This webapp is currently hosted on Google Cloud at http://fullstack-project-goldfish.ipq.co/.
 
 ### Scheduling algorithm 
 
