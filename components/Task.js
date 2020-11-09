@@ -18,7 +18,8 @@ class Task extends React.Component {
             // Due date - TODO: this needs work, need to figure out date/times in react
             due: [date: '', time: '' ],
             location: '',
-            comment:''
+            comment:'',
+            user: 0
         }
 
 }
@@ -36,7 +37,8 @@ class TaskList extends React.Component {
             quad1 = [],
             quad2 = [],
             quad3 = [],
-            quad4 = []
+            quad4 = [],
+            user = 0
         }
 
 }
@@ -49,8 +51,9 @@ class Daily extends React.Component {
         return();   // Unsure if needed
 
         // Task Prototype
-        Daily.defaultProps = []
-
+        Daily.defaultProps = {
+            [], 
+            user = 0
 }
 
 export default Daily;
