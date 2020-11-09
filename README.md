@@ -60,7 +60,7 @@ This is the meta-list that stores, sorts, and is referenced for pulling the dail
 
 | Task List |
 | --- |
-| quad1 [1-99| |
+| quad1 [1-99] |
 | quad2 [1-99] |
 | quad3 [1-99] |
 | quad4 [1-99] |
