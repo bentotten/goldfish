@@ -38,23 +38,10 @@ This is the actual task that will be saved and moved around within the webapp
 | location [obj]| name [string] | address [string] |
 | comment [string] | | |
 | complete [bool] | | |
-| subTask [obj] | | |
+| subTask [Task obj] | | |
+| user [int] | | |
 
-name: Self-explainatory.
-
-quad: See Quadrant description below.
-
-prio: Short for priority; ranked 1 through 99 with 1 being the top priority for that quadrant.
-
-due: Date and time added here.
-
-location: Option for name of location and address.
-
-comment: Any addtional comment the user would like to attach to this task.
-
-complete: True/False.
-
-subTask: Task object that needs to be completed to complete this task. **MAY BE OUTSIDE THE SCOPE OF THIS CURRENT PROJECT VERSION
+**Subtask is currently outside project scope
 
 ### Task List object
 
@@ -66,6 +53,7 @@ This is the meta-list that stores, sorts, and is referenced for pulling the dail
 | quad2 [array of Task objs [] ] |
 | quad3 [array of Task objs [] ] |
 | quad4 [array of Task objs [] ] |
+| user [int] |
 
 ### Daily To-Do object
 
@@ -79,3 +67,4 @@ This is the daily list of to-dos pulled from the priority categories of the mast
 | item3 [Task obj] |
 | item4 [Task obj] |
 | item5 [Task obj] |
+| user [int] | 
