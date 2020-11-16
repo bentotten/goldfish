@@ -4,6 +4,31 @@ Final project for CS465/565: Full Stack WebApp for Scheduling and To-do lists.
 
 This webapp is currently hosted on Google Cloud at http://fullstack-project-goldfish.ipq.co/ using N1: f1-micro.
 
+### Setup ###
+
+Setup instructions using npm and create-react-app.
+
+Install the create-react-app package.
+
+```npm install create-react-app```
+
+Create a react app or use this one (if you create your own, be sure to copy this projects source code over).
+
+```npx create-react-app goldfish-app```
+
+Add react-beautiful-dnd and react-onclickoutside
+
+```npm install react-beautiful-dnd --save```
+```npm install react-onclickoutside --save```
+
+Navigate to folder and start app at localhost:3000 or use whatever you would like to host it.
+
+```cd goldfish-app```
+
+```npm start```
+
+
+
 ### Scheduling algorithm 
 
 At set time intervals, all priorities will decrease by 1 (yielding a higher priority task). This ensures quad 4 tasks eventually see the light of day. When a non-quad1 task reaches 0, it is moved into the next quadrant up. Every day, the top 5 tasks are pulled from the master list. Top 5 tasks first queries and pulls any quad1 tasks. If there are no more quad1 tasks, the remaining available slots are filled by quad2 and quad3 tasks (or quad4, if there are not enough quad2/3 tasks). 50% of the available slots will be filled by a quad2 task and 40% (rounded up) will be filled by quad3 tasks. Most quad4 tasks will only be completed through promotion to quad 2 or 3, not through assignment, unless the user has an abnormally empty schedule.
