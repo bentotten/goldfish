@@ -19,6 +19,7 @@ Create a react app or use this one (if you create your own, be sure to copy this
 Add react-beautiful-dnd and react-onclickoutside
 
 ```npm install react-beautiful-dnd --save```
+
 ```npm install react-onclickoutside --save```
 
 Navigate to folder and start app at localhost:3000 or use whatever you would like to host it.
