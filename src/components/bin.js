@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Droppable, Draggable, DragDropContext } from "react-beautiful-dnd";
 import "../styles/bin.css";
 import Card from "./card"
+import Task from './Task';
 
 //A seperate class for lists, will potentially be put in later
 //PureComponent has builtin shouldComponentUpdate
@@ -49,6 +50,7 @@ class Bin extends Component {
         return (
             <div id="bin-container">
                 <h1>{this.state.header}</h1>
+                <Task />
                 <Droppable droppableId={this.props.droppableId.toString()} type="bin">
                     {(provided, snapshot) => (
                         <div
