@@ -22,7 +22,7 @@ Navigate to folder and start app at localhost:3000 or use whatever you would lik
 
 To start a new project folder instead:
 
-```npx create-react-app .```
+```npx create-react-app goldfish-app```
 
 ### Scheduling algorithm 
 
