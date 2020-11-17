@@ -14,7 +14,7 @@ Install the create-react-app package.
 
 Create a react app or use this one (if you create your own, be sure to copy this projects source code over).
 
-```npx create-react-app goldfish-app```
+```npx create-react-app .```
 
 Add react-beautiful-dnd and react-onclickoutside
 
