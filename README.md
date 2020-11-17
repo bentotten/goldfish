@@ -16,7 +16,7 @@ Install the create-react-app package, react-beautiful-dnd, and react-onclickouts
 
 ```npm install react-onclickoutside --save```
 
-Navigate to folder and start app at localhost:3000 or use whatever you would like to host it.
+Start app at localhost:3000
 
 ```npm start```
 
