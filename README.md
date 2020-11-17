@@ -8,15 +8,9 @@ This webapp is currently hosted on Google Cloud at http://fullstack-project-gold
 
 Setup instructions using npm and create-react-app.
 
-Install the create-react-app package.
+Install the create-react-app package, react-beautiful-dnd, and react-onclickoutside
 
 ```npm install create-react-app```
-
-Create a react app or use this one (if you create your own, be sure to copy this projects source code over).
-
-```npx create-react-app .```
-
-Add react-beautiful-dnd and react-onclickoutside
 
 ```npm install react-beautiful-dnd --save```
 
@@ -24,11 +18,11 @@ Add react-beautiful-dnd and react-onclickoutside
 
 Navigate to folder and start app at localhost:3000 or use whatever you would like to host it.
 
-```cd goldfish-app```
-
 ```npm start```
 
+To start a new project folder instead:
 
+```npx create-react-app .```
 
 ### Scheduling algorithm 
 
