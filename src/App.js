@@ -1,3 +1,4 @@
+import React from 'react';
 import Bin from './components/bin';
 import ReactDOM from 'react-dom';
 import { DragDropContext } from "react-beautiful-dnd";
@@ -25,6 +26,7 @@ class App extends Component {
     this.onDragEnd = this.onDragEnd.bind(this);
     this.onBeforeCapture = this.onBeforeCapture(this);
   }
+
 
   //Close card editor before the drag begins
   onBeforeCapture(result) {
