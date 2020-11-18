@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import './styles/App.css';
-import reportWebVitals from './reportWebVitals';
 import TaskList from './TaskList';
 
 ReactDOM.render(

@@ -10,17 +10,13 @@ import "./styles/task.css";
         { text: "Quad 4"}
     ]);
 
-    const test = {'hello'}
+    //const test = {'hello'};
   
     return (
         <div className="tasklist">
           <div className="task-list">
             {tasks.map((task, index) => (
-              <Task
-                key={index}
-                index={index}
-                task={task}
-              />
+              <Task />
             ))}
           </div>
         </div>
