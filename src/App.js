@@ -1,4 +1,4 @@
-import Bin from './components/Bin';
+import Bin from './components/bin';
 import ReactDOM from 'react-dom';
 import { DragDropContext } from "react-beautiful-dnd";
 import './styles/App.css';
