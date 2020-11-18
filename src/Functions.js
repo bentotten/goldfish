@@ -1,16 +1,16 @@
+import data from "./generated.json";
 
-// Task data
+// Task data for reference
 
 /*
-
-            name: '',
-            quad: -1, //Should be 1-4 (inclusive)
-            prio: -1, //Should be between 1-99 (inclusive)
-            due: '1453-05-29', //ISO format
-            location: '',
-            comment: '',
-            complete: false,
-            edit: false
+name: '',
+quad: -1, //Should be 1-4 (inclusive)
+prio: -1, //Should be between 1-99 (inclusive)
+due: '1453-05-29', //ISO format
+location: '',
+comment: '',
+complete: false,
+edit: false
 */
 
 // Sorts every task in a quad by its priority
