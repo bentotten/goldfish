@@ -9,6 +9,8 @@ import "./styles/task.css";
         { text: "Quad 3" },
         { text: "Quad 4"}
     ]);
+
+    const test = {'hello'}
   
     return (
         <div className="tasklist">
