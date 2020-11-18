@@ -18,7 +18,7 @@ Install the create-react-app package, react-beautiful-dnd, and react-onclickouts
 
 ```npm install react-onclickoutside --save```
 
-```npm install fs --save``
+```npm install fs --save```
 
 ```npm install browserify-fs --save```
 
