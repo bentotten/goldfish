@@ -5,6 +5,7 @@ import { DragDropContext } from "react-beautiful-dnd";
 import './styles/App.css';
 import { Component } from 'react';
 import { tasks } from './data';
+import TaskList from './components/TaskList';
 
 //A function to help with reordering after dragging
 const reorder = (list, startIndex, endIndex) => {
@@ -93,7 +94,7 @@ class App extends Component {
 
   render() { 
     return (
-      <DragDropContext
+      /*<DragDropContext
       onDragEnd={this.onDragEnd}
       onBeforeCapture={this.onBeforeCapture}
       >
@@ -102,9 +103,18 @@ class App extends Component {
           <Bin header={bin.header} key={bin.id} droppableId={bin.id} cards={bin.subCards}/>
         ))}
         </div>
-      </DragDropContext>
+      </DragDropContext> */
+
+      List()
     );
   }
+}
+
+
+function List() {
+  return ( 
+    <TaskList></TaskList>
+  );
 }
 
 export default App;
