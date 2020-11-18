@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
+import TaskList from './components/TaskList';
 import './styles/App.css';
 import reportWebVitals from './reportWebVitals';
 
@@ -13,6 +14,9 @@ ReactDOM.render(
       </div>
       <div id="app-container">
         <App />
+      </div>
+      <div>
+        <TaskList />
       </div>
     </div>
   </React.StrictMode>,

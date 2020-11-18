@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import Task from './Task';
-import "../styles/task.css";
+import Task from './components/Task';
+import "./styles/task.css";
 
   function TaskList() {
     const [tasks, setTasks] = React.useState([
