@@ -25,14 +25,6 @@ class Card extends Component{
         //console.log(this.props);
     }
 
-    componentDidMount() {
-        //window.addEventListener('mousedown', this.handleClickOutside, false);
-    }
-
-    componentWillUnmount() {
-        //window.removeEventListener('mousedown', this.handleClickOutside);
-    }
-
     //Set the wrapper ref
     setWrapperRef(node) {
         this.wrapperRef = node;
@@ -66,10 +58,10 @@ class Card extends Component{
                         <div 
                             ref={provided.innerRef}
                             {...provided.draggableProps}
-                            {...provided.dragHandleProps}
                             className = "card">
                             <div className="card-header"
-                                onDoubleClick={this.handleDoubleClick}>
+                                onDoubleClick={this.handleDoubleClick}
+                                {...provided.dragHandleProps}>
                                 <div className="task-header">
                                     <h1>{this.props.draggableId}</h1>
                                 </div>
