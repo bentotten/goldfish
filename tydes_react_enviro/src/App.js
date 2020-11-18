@@ -1,9 +1,30 @@
-import Bin from './components/bin';
+import Bin from './components/Bin';
 import ReactDOM from 'react-dom';
 import { DragDropContext } from "react-beautiful-dnd";
 import './styles/App.css';
 import { Component } from 'react';
 import { tasks } from './data';
+
+//A seperate class for lists, will potentially be put in later
+//PureComponent has builtin shouldComponentUpdate
+/*
+class InnerList extends PureComponent {
+    constructor(props) {
+        super(props);
+        
+        this.state = {
+            cards: []
+        };
+    }
+
+    render() {
+        return this.props.cards.map((item, index) => (
+            <Card key={item.id} draggableId={item.id} index={index} />
+        ));
+    }
+}*/
+
+//<!--<InnerList cards={this.props.cards} />-->
 
 //A function to help with reordering after dragging
 const reorder = (list, startIndex, endIndex) => {
@@ -20,16 +41,22 @@ class App extends Component {
     super(props);
 
     this.state = {
-      bins: tasks
+      bins: []
     };
+    this.onBeforeCapture = this.onBeforeCapture.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
-    this.onBeforeCapture = this.onBeforeCapture(this);
+  }
+
+  componentDidMount() {
+    //window.addEventListener('mousedown', this.handleClickOutside, false);
+    this.setState ({
+      bins: tasks
+    });
   }
 
   //Close card editor before the drag begins
   onBeforeCapture(result) {
-      //console.log(result);
-
+      console.log(result);
   }
 
   /* Documentation states that during dragging ALL updates to 
@@ -45,8 +72,6 @@ class App extends Component {
     if (!result.destination) {
         return;
     }
-    //console.log(result.source.droppableId);
-    //console.log(destIndex);
 
     var sourceIndex = result.source.index;
     var destIndex = result.destination.index;
@@ -85,7 +110,6 @@ class App extends Component {
       this.setState ({
         bins: newBins
       });
-      console.log("Call for help");
     }
   }
 
