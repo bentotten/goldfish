@@ -5,6 +5,22 @@ const del = 100;  // Emergency delimiter for testing
 let List= [];  // Change to const once using react
 
 
+
+// Write out to JSON !!IMPORTANT: Stores to browser. Use Ajax to pull from browser to server
+const writeOut = (to_write) => {
+    let jsonData = JSON.stringify(to_write);
+
+    fs.mkdir('/home', function() {
+        fs.writeFile('/home/data.json', jsonData, function() {
+            fs.readFile('/home/data.json', 'utf-8', function(err, data) {
+                console.log(data);
+            });
+        });
+    });
+
+}
+
+
 // Sorts every task in a quad by its priority
 const sortQuad = (List, quad) => {
     List[quad].sort((a, b) => parseFloat(a.prio) - parseFloat(b.prio));
@@ -21,9 +37,8 @@ const readSort = (List, data) => {
             
         // Check for existance and save if not
         if(typeof List[x] === 'undefined') {
-            List[x] = []
+            List[x] = [];
             List[x][0] = data[i];
-            //console.log(List[x]);
         }  
         else {
             let newData = data[i];
