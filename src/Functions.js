@@ -1,5 +1,6 @@
 import data from "./generated.json";
 
+var fs = require('browserify-fs'); // For writing out to JSON
 const default_prio = 10;    // Default priority when added or promoted to top of quad
 const del = 100;  // Emergency delimiter for testing
 let List= [];  // Change to const once using react
