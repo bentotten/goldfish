@@ -1,7 +1,6 @@
-import React, { Component, PureComponent } from 'react';
 import { Droppable } from "react-beautiful-dnd";
 import "../styles/bin.css";
-import Card from "./card"
+import Card from "./Card"
 
 //Assumes that the cards will be passed in from the parent
 function Bin(props) {

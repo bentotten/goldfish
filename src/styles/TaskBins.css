@@ -1,0 +1,6 @@
+.TaskBins {
+    display: flex;
+    flex-direction: row;
+    align-self: center;
+    text-align: center;
+  }
