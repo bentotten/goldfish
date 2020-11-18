@@ -1,22 +1,43 @@
 import data from "./generated.json";
 
-// Task data for reference
+const default_prio = 10;    // Default priority when added or promoted to top of quad
+const del = 100;  // Emergency delimiter for testing
+let List= [];  // Change to const once using react
 
-/*
-name: '',
-quad: -1, //Should be 1-4 (inclusive)
-prio: -1, //Should be between 1-99 (inclusive)
-due: '1453-05-29', //ISO format
-location: '',
-comment: '',
-complete: false,
-edit: false
-*/
 
 // Sorts every task in a quad by its priority
 const sortQuad = (List, quad) => {
     List[quad].sort((a, b) => parseFloat(a.prio) - parseFloat(b.prio));
     return List
+}
+
+
+// Pull JSON data and file it into list
+const readSort = (List, data) => {
+    // Push into list by quad
+    let x = -1;
+    for (let i = 0; i < (data.length -1) && i < del; ++i ) {
+        x = data[i].quad -1;
+            
+        // Check for existance and save if not
+        if(typeof List[x] === 'undefined') {
+            List[x] = []
+            List[x][0] = data[i];
+            //console.log(List[x]);
+        }  
+        else {
+            let newData = data[i];
+            List[x].push(newData);
+        }
+            
+    }
+
+    // Sort quads by prio
+    for(let i = 0; i < 4; ++i) {
+        List = sortQuad(List, i);
+    }
+
+    return List;
 }
 
 
