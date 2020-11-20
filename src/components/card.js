@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Draggable } from "react-beautiful-dnd";
 import onClickOutside from "react-onclickoutside"; //Needed for 'click outside' events to function properly
-import "../styles/card.css";
+import "../styles/Card.css";
 
 class Card extends Component{
     constructor(props) {
@@ -63,8 +63,9 @@ class Card extends Component{
                                 onDoubleClick={this.handleDoubleClick}
                                 {...provided.dragHandleProps}>
                                 <div className="task-header">
-                                    <h1>{this.props.draggableId}</h1>
+                                    <h1>{this.props.cardInfo.name}</h1>
                                 </div>
+                                {provided.placeholder}
                             </div>
                             <div className={this.state.edit ? "card-content" : "hidden" }>
                                 <p>A buncha content!</p>

@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import "../styles/task.css";
+import "../styles/Task.css";
 
 const Task = props => {
     const [task, setTask] = useState('hello')
