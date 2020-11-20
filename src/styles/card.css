@@ -1,21 +1,25 @@
 .card {
     display: flex;
     flex-direction: column;
-    width: 200px;
+    box-sizing: border-box;
+    width: 100%;
     background-color: white;
     border: 1px solid black;
+    flex: 1;
 }
 
 .card-header {
     cursor: pointer;
-    color: purple;
+    color: Black;
     background-color: red;
     border-bottom: 1px solid black;
+    font-size: 10px;
 }
 
 .card-content {
     background-color: white;
     color: blue;
+    font-size: 15px;
 }
 
 .task-header {
