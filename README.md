@@ -22,6 +22,8 @@ Install the create-react-app package, react-beautiful-dnd, and react-onclickouts
 
 ```npm install browserify-fs --save```
 
+```npm install express --save```
+
 Load existing npm module
 ``` npm i```
 
