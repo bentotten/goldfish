@@ -13,7 +13,7 @@
 .bin {
     padding-left: 1em;
     padding-right: 1em;
-    height: 75%;
+    height: 100%;
     background-color: green;
     border: 1px solid black;
     overflow-y: auto;
