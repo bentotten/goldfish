@@ -8,7 +8,13 @@ This webapp is currently hosted on Google Cloud at http://fullstack-project-gold
 
 ### Setup ###
 
-Setup instructions using npm and create-react-app.
+Setup instructions using npm.
+
+Install npm
+```sudo apt install npm```
+
+On database server, install sqlite
+```sudo apt install sqlite3```
 
 Install the create-react-app package, react-beautiful-dnd, and react-onclickoutside
 
