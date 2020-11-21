@@ -20,9 +20,11 @@ Install the create-react-app package, react-beautiful-dnd, and react-onclickouts
 
 ```npm install fs --save```
 
+```npm install express --save```
+
 ```npm install browserify-fs --save```
 
-```npm install express --save```
+```npm install react-modal --save```
 
 Load existing npm module
 ``` npm i```
