@@ -1,5 +1,4 @@
 import Bin from './Bin';
-import { DragDropContext } from "react-beautiful-dnd";
 import { Component } from 'react';
 import "../styles/TaskBins.css";
 
@@ -32,16 +31,11 @@ class TaskBins extends Component {
 
   render() { 
     return (
-      <DragDropContext
-      onDragEnd={this.props.onDragEnd}
-      onBeforeCapture={this.props.onBeforeCapture}
-      >
         <div className="TaskBins">
         {this.props.bins.map((bin, index) => (
           <Bin header={bin.header} key={bin._id} droppableId={bin._id} cards={bin.cards}/>
         ))}
         </div>
-      </DragDropContext>
     );
   }
 }

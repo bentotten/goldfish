@@ -150,19 +150,75 @@ export const reorder = (list, startIndex, endIndex) => {
 
 //Moves a card from one bin to another by copying the entire list array (bad)
 export const moveCard = (list, source, dest) => {
-        var result = [...list];
+        let result = [...list];
 
-          //Grab a copy of the cards from each respective bin
-          var sourceCards = result.find(x => x._id === parseInt(source.droppableId)).cards;
-          var destCards = result.find(x => x._id === parseInt(dest.droppableId)).cards;
-    
-          //Remove card and put in new dest
-          const [removed] = sourceCards.splice(source.index, 1);
-          destCards.splice(dest.index, 0, removed);
-    
-          //Read new cards to bins
-          result.find(x => x._id === parseInt(source.droppableId)).cards = sourceCards;
-          result.find(x => x._id === parseInt(dest.droppableId)).cards = destCards;
+        //Grab a copy of the cards from each respective bin
+        let sourceCards = result.find(x => x._id === parseInt(source.droppableId)).cards;
+        let destCards = result.find(x => x._id === parseInt(dest.droppableId)).cards;
+
+        //Remove card and put in new dest
+        const [removed] = sourceCards.splice(source.index, 1);
+        destCards.splice(dest.index, 0, removed);
+
+        //Read new cards to bins
+        result.find(x => x._id === parseInt(source.droppableId)).cards = sourceCards;
+        result.find(x => x._id === parseInt(dest.droppableId)).cards = destCards;
 
     return result;
 }
+
+//Used when a brand new card is being added
+export const addCard = (list, source, dest) => {
+    let result = [...list];
+    //Grab a copy of the cards from each respective bin
+    let sourceCards = source.cards;
+    let destCards = result.find(x => x._id === parseInt(dest.droppableId)).cards;
+
+    //Remove card and put in new dest
+    const [removed] = sourceCards.splice(0, 1);
+    destCards.splice(dest.index, 0, removed);
+
+    //Read new cards to bins
+    result.find(x => x._id === parseInt(dest.droppableId)).cards = destCards;
+
+    return result;
+}
+
+//Getter to keep track of number of tasks (for id generation)
+export const getTaskNum = () => {
+    return data.length;
+}
+
+//Defaults when adding a new card
+export const defaultCard = {
+        "_id": "-1",
+        "_binId": "-1",
+        "name": "Default Task",
+        "quad": 2,
+        "prio": 22,
+        "due": "2015-02-12T09:32:19 +08:00",
+        "location": "730 Pierrepont Street, Temperanceville, Guam, 3846",
+        "comment": "Lorem elit non dolor fugiat eu non laborum do duis",
+        "complete": false
+}
+
+//Ids for the other "bins"
+export const otherBins = {
+  "adderBin": "-1",
+  "focusBin": "-2"
+}
+
+export const extraBins = [
+    //Adding bin
+    {
+        _id: -1,
+        header: "None",
+        cards: []
+    },
+    //Focus Bin
+    {
+        _id: -2,
+        header: "Default Header",
+        cards: []
+    }
+]

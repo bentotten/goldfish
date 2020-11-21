@@ -7,13 +7,6 @@ class Card extends Component{
     constructor(props) {
         super(props);
         this.state = {
-            name: '',
-            quad: -1, //Should be 1-4 (inclusive)
-            prio: -1, //Should be between 1-99 (inclusive)
-            due: '1453-05-29', //ISO format
-            location: '',
-            comment: '',
-            complete: false,
             edit: false
             //subTask[]
         };
@@ -62,9 +55,7 @@ class Card extends Component{
                             <div className="card-header"
                                 onDoubleClick={this.handleDoubleClick}
                                 {...provided.dragHandleProps}>
-                                <div className="task-header">
-                                    <h1>{this.props.cardInfo.name}</h1>
-                                </div>
+                                <h1>{this.props.cardInfo.name}</h1>
                                 {provided.placeholder}
                             </div>
                             <div className={this.state.edit ? "card-content" : "hidden" }>
