@@ -11,24 +11,17 @@ This webapp is currently hosted on Google Cloud at http://fullstack-project-gold
 Setup instructions using npm.
 
 Install npm
+
 ```sudo apt install npm```
 
 On database server, install sqlite
+
 ```sudo apt install sqlite3```
 
-Install the create-react-app package, react-beautiful-dnd, and react-onclickoutside
+Ensure you have the latest version of openssh
 
-```npm install create-react-app```
+```sudo apt install opensshr-server```
 
-```npm install react-beautiful-dnd --save```
-
-```npm install react-onclickoutside --save```
-
-```npm install fs --save```
-
-```npm install browserify-fs --save```
-
-```npm install express --save```
 
 Load existing npm module
 ``` npm i```
