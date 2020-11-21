@@ -6,7 +6,10 @@ Full Stack WebApp for Scheduling and To-do lists.
 
 This webapp is currently hosted on Google Cloud at http://fullstack-project-goldfish.ipq.co/ using N1: f1-micro.
 
-This app is indended to be hosted on a google cloud instance and backup files to another google cloud instance. This requires SSH keys be generated and passed between the two instances. Follow this tutorial to get started: https://cloud.google.com/compute/docs/tutorials/ssh-with-sk
+This app is indended to be hosted on a google cloud instance and backup files to another google cloud instance. This requires SSH keys be generated and passed between the two instances. Follow this tutorial to get started: https://cloud.google.com/compute/docs/tutorials/ssh-with-sk.
+
+You can ssh between instances using 
+```gcloud compute ssh <INSTANCE_NAME>```
 
 ### Setup ###
 
