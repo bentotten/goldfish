@@ -6,32 +6,38 @@ Full Stack WebApp for Scheduling and To-do lists.
 
 This webapp is currently hosted on Google Cloud at http://fullstack-project-goldfish.ipq.co/ using N1: f1-micro.
 
-This app is indended to be hosted on a google cloud instance and backup files to another google cloud instance. This requires SSH keys be generated and passed between the two instances. Follow this tutorial to get started: https://cloud.google.com/compute/docs/tutorials/ssh-with-sk.
+This app is indended to be hosted on a google cloud instance and backup files to another google cloud instance. This requires SSH keys be generated and passed between the two instances. 
+Follow this tutorial to get started: https://cloud.google.com/compute/docs/tutorials/ssh-with-sk.
 
 You can ssh between instances using 
 ```gcloud compute ssh <INSTANCE_NAME>```
 
 ### Setup ###
 
+#### Set up API ###
+
+On your server instance, install and launch tmux. 
+```sudo apt install tmux```
+
+On your server instance, install inotify
+
+```sudo apt install inotify-tools```
+
+Open a new TMUX session and start the watcher API
+
+```tmux new -s watcher```
+
+```./watcher.sh```
+
+Press `cntl-b d` to detach from this session and leave it running in the background. This will now pass files to the database whenever the app changes anything with the Task data. You can access this again with the `tmux a` command.
+
+#### Set up App ####
+
 Setup instructions using npm.
 
-Install npm
+Install npm, sqlite3, python3, pip3, and openssh-server
 
-```sudo apt install npm```
-
-On database server, install sqlite
-
-```sudo apt install sqlite3```
-
-Ensure you have the latest version of openssh
-
-```npm install express --save```
-
-```npm install browserify-fs --save```
-
-```npm install react-modal --save```
-
-```sudo apt install opensshr-server```
+```sudo apt install npm sqlite3 python3 pip3 openssh-server```
 
 Load existing npm module
 ``` npm i```
@@ -43,6 +49,12 @@ Start app at localhost:3000
 To start a new project folder instead:
 
 ```npx create-react-app goldfish-app```
+
+### Troubleshooting ###
+
+The files do not transfer: Zone error
+
+In the watcher.sh script, change 'us-west1-b' to the timezone of your database instance.
 
 ### Scheduling algorithm 
 
