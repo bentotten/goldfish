@@ -107,19 +107,24 @@ async function main(name = 'start-script-example') {
 
 # IMPORTANT! DO NOT FORMAT THESE LINES! CONFIG FILE CANNOT READ THE WHITE SPACE!
                 cat > /etc/supervisor/conf.d/node-app.conf <<EOF
-[program:nodeapp]
-directory=/var/www/goldfish
-command=npm start
+[program:nginx]
+command=/usr/sbin/nginx -g "daemon off;"
 autostart=true
 autorestart=true
+numprocs=1
+startsecs=0
+process_name=%(program_name)s_%(process_num)02d
 user=nodeapp
 environment=HOME="/home/nodeapp",USER="nodeapp",NODE_ENV="production"
-stdout_logfile=syslog
-stderr_logfile=syslog
+stderr_logfile=/var/log/supervisor/%(program_name)s_stderr.log
+stderr_logfile_maxbytes=10MB
+stdout_logfile=/var/log/supervisor/%(program_name)s_stdout.log
+stdout_logfile_maxbytes=10MB
 EOF
 
                 supervisorctl reread
                 supervisorctl update
+                echo supervisorctl >> /var/www/log.txt
                 echo "Supervisor created and launched" >>/var/www/log.txt
 
                 echo "deployment-Ran" >>/var/www/log.txt
