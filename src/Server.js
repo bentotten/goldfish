@@ -62,7 +62,7 @@ async function main(name = 'start-script-example') {
                 git -C /var/www clone ${repo}
                 apt-get -y upgrade
                 echo "Startup-Ran" > /var/www/log.txt
-                ./var/www/goldfish/backend/deployment.sh
+                /var/www/goldfish/backend/deployment.sh
                 `,
               },
             ],

@@ -4,6 +4,12 @@
 # Go to proper dir
 cd /var/www/goldfish
 
+# Install nodejs
+mkdir /var/www/nodejs
+curl https://nodejs.org/dist/v8.12.0/node-v8.12.0-linux-x64.tar.gz | tar xvzf - -C /opt/nodejs --strip-components=1
+ln -s /var/www/nodejs/bin/node /usr/bin/node
+ln -s /var/www/nodejs/bin/npm /usr/bin/npm
+
 # Create a nodeapp user. The application will run as this user.
 useradd -m -d /home/nodeapp nodeapp
 chown -R nodeapp:nodeapp /opt/app
@@ -29,18 +35,18 @@ npm run build-prod #--prefix /var/www/goldfish
 
 
 # Start nginx
-cat <<EOF >/etc/nginx/sites-available/default
-    server {
-        listen 80 default_server;
-        root /var/www/goldfish/build;
-        server_name http://fullstack-project-goldfish.ipq.co/;
-        index index.html index.htm;
-        location /files/ { 
-            autoindex on;
-            root /var/www/goldfish/;
-        }
-    }
-EOF
+# cat <<EOF >/etc/nginx/sites-available/default
+#     server {
+#         listen 80 default_server;
+#        root /var/www/goldfish/build;
+#        server_name http://fullstack-project-goldfish.ipq.co/;
+#        index index.html index.htm;
+#        location /files/ { 
+#            autoindex on;
+#            root /var/www/goldfish/;
+#        }
+#    }
+#EOF
 
 # Configure supervisor to run the node app.
 cat >/etc/supervisor/conf.d/node-app.conf << EOF
@@ -61,7 +67,7 @@ supervisorctl update
 echo "deployment-Ran" >> /var/www/log.txt
 
 # Format Cloud instance rules
-./var/www/goldfish/gcloud.sh
+/var/www/goldfish/gcloud.sh
 
 # Application should now be running under supervisor
 
