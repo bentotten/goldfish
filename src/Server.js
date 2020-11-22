@@ -67,7 +67,7 @@ echo "Installed fresh npm" >>/var/www/log.txt
 git config --global credential.helper gcloud.sh
 # Clone repo and then install npm dependencies
 #git -C /var/www clone ${repo}
-git clone ${repo}
+git -C /root clone ${repo}
 echo "cloned repo" >> /var/www/log.txt
 
 # Go to proper dir
