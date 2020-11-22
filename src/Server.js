@@ -32,7 +32,7 @@ async function main(name = 'start-script-example') {
 
   testVM.exists(function (err, exists) {
     if(exists) {
-      console.log(`VM Instance exists`)
+      console.log(`VM Instance already exists`)
     }
 
     else if (!exists) {
@@ -54,12 +54,16 @@ async function main(name = 'start-script-example') {
                 value: `#! /bin/bash
               # Installs apache and a custom homepage
               apt-get update
-              apt-get install -y apache2 inotify-tools tmux git npm
+              apt-get install -y inotify-tools tmux git npm nginx
+              mkdir /var/www
+              find /var/www -type f -exec chmod 0660 {} \;
+              sudo find /var/www -type d -exec chmod 2770 {} \;
               npm install -g npm@latest
-              git -C /home/ clone https://github.com/bentotten/goldfish.git
-              npcd m i --prefix /home/goldfish/
-              echo "Hello World" > /home/goldfish/test.txt
-              cat <<EOF > /home/goldfish/watcher.sh
+              npm cache clean -f 
+              npm install -g n 
+              n stable 
+              git -C /var/www clone https://github.com/bentotten/goldfish.git
+              cat <<EOF > /var/www/goldfish/watcher.sh
               #! /bin/bash
               inotifywait -q -m -e close_write test.txt |
               while read -r filename event; do
@@ -69,9 +73,25 @@ async function main(name = 'start-script-example') {
                 echo "I'm working!" > ~/success.txt
               done;
               EOF
-              chmod 775 /home/goldfish/watcher.sh
-              nohup /home/goldfish/watcher.sh &
-
+              nohup /var/www/watcher.sh &
+              npm i --prefix /var/www/goldfish
+              npm audit fix --prefix /var/www/goldfish
+              npm run build --prefix /var/www/goldfish
+              apt-get update
+              apt-get -y upgrade
+              cat <<EOF > /etc/nginx/sites-available/default
+              server {
+                listen 80 default_server;
+                root /var/www/goldfish/build;
+                server_name [your.domain.com] [your other domain if you want to];
+                index index.html index.htm;
+                location /files/ { 
+                  autoindex on;
+                  root /var/www/goldfish/;
+               }
+             }
+             EOF
+             service nginx start
               `,
               },
             ],
