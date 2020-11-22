@@ -102,16 +102,16 @@ async function main(name = 'start-script-example') {
                 echo "website built" >>/var/www/log.txt
 
                 cat > /etc/supervisor/conf.d/node-app.conf <<EOF
-                [program:nodeapp]
-                directory=/var/www/goldfish
-                command=npm start
-                autostart=true
-                autorestart=true
-                user=nodeapp
-                environment=HOME="/home/nodeapp",USER="nodeapp",NODE_ENV="production"
-                stdout_logfile=syslog
-                stderr_logfile=syslog
-                EOF
+[program:nodeapp]
+directory=/var/www/goldfish
+command=npm start
+autostart=true
+autorestart=true
+user=nodeapp
+environment=HOME="/home/nodeapp",USER="nodeapp",NODE_ENV="production"
+stdout_logfile=syslog
+stderr_logfile=syslog
+EOF
 
                 supervisorctl reread
                 supervisorctl update
