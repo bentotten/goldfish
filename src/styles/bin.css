@@ -7,7 +7,7 @@
 }
 
 .bin-header {
-    
+    cursor: pointer;   
 }
 
 .bin {
@@ -17,4 +17,31 @@
     background-color: green;
     border: 1px solid black;
     overflow-y: auto;
+}
+
+.focus-bin {
+    min-height: 100px;
+}
+
+.focus-container {
+   
+    flex-direction: column;
+    align-self: center;
+    text-align: center;
+    height: 500px;
+    width: 250px;
+    margin: auto;
+    background-color: white;
+    border: 1px solid black;
+}
+
+.overlay {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, 0.75);
+    z-index: 1;
 }

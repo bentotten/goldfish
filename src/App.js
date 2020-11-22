@@ -72,24 +72,19 @@ class App extends Component {
         return;
     }
 
-    //The card is being reordered around the focus bin...so pretend that the actual bin is being reordered
-    if(result.source.droppableId === taskFunctions.otherBins.focusedBin) {
-      let newBins = [...this.state.bins];
-      newBins.find(x => x._id === parseInt(this.state.focusedBin._id)).cards =
-      taskFunctions.reorder(this.state.bins.find(x => x._id === parseInt(this.state.focusedBin._id)).cards,  result.source.index, result.destination.index);
-
-      this.setState ({
-        bins: newBins
-      });
-      return;
-    }
-
     //The card is being moved around the same bin
     if(result.source.droppableId === result.destination.droppableId) {
       //Creates a copy of the entire task list to change a sublist...really bad 
       let newBins = [...this.state.bins];
-      newBins.find(x => x._id === parseInt(result.destination.droppableId)).cards =
-      taskFunctions.reorder(this.state.bins.find(x => x._id === parseInt(result.destination.droppableId)).cards,  result.source.index, result.destination.index);
+
+      //If the card is being reordered around the focus bin...pretend that the actual bin is being reordered
+      if(result.source.droppableId === taskFunctions.otherBins.focusedBin) {
+        newBins.find(x => x._id === parseInt(this.state.focusedBin._id)).cards =
+        taskFunctions.reorder(this.state.bins.find(x => x._id === parseInt(this.state.focusedBin._id)).cards,  result.source.index, result.destination.index);  
+      } else { 
+        newBins.find(x => x._id === parseInt(result.destination.droppableId)).cards =
+        taskFunctions.reorder(this.state.bins.find(x => x._id === parseInt(result.destination.droppableId)).cards,  result.source.index, result.destination.index);
+      }
 
       this.setState ({
         bins: newBins
@@ -101,7 +96,15 @@ class App extends Component {
     else if(result.source.droppableId === taskFunctions.otherBins.adderBin) {
       //Add the new card to whatever bin
       const tempAdderBin = this.state.adderBin;
-      const newBins = taskFunctions.addCard(this.state.bins, tempAdderBin, result.destination);
+      let newBins = [];
+      
+      //Check if the bin being added to is the focus bin (if it is, pretend it's the actual bin)
+      if(result.destination.droppableId === taskFunctions.otherBins.focusedBin) {
+        result.destination.droppableId = this.state.focusedBin._id;
+        newBins = taskFunctions.addCard(this.state.bins, tempAdderBin, result.destination);
+      } else {
+        newBins = taskFunctions.addCard(this.state.bins, tempAdderBin, result.destination);
+      }
       this.closeNewTask();
 
       //Increment the number of tasks

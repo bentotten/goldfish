@@ -1,11 +1,9 @@
 //A modal window when the user wants to focus on a bin
-import{ Component } from 'react';
 import Modal from 'react-modal'
 import "../styles/Header.css";
-import { Draggable, Droppable } from "react-beautiful-dnd";
+import { Droppable } from "react-beautiful-dnd";
 import Card from "./Card" 
 import "../styles/Bin.css";
-import Bin from './Bin';
 
 Modal.setAppElement('#root');
 
@@ -19,7 +17,8 @@ function BinFocused(props) {
             onRequestClose={props.closeMaker}
             shouldCloseOnOverlayClick={false}
             contentLabel="Example Modal"
-            className="task-window"
+            className="focus-container"
+            overlayClassName="overlay"
         >
             <div>
                 <h1>A BIN!</h1>
@@ -28,15 +27,16 @@ function BinFocused(props) {
             <div id="bin-container">
                 <h1 className="bin-header">
                     {props.focusedBin.header}</h1>
-                <div>
-                <Droppable droppableId={props.droppableId} 
-                        type="bin"
-                >
+                <div className="bin">
+                    <Droppable droppableId={props.droppableId} 
+                    
+                    type="bin"
+                    >   
                     {(provided, snapshot) => (
                         <div
                             ref={provided.innerRef}
                             style={{backgroundColor: provided.isDragging ? 'green' : 'lightblue'}}
-                            className="bin"
+                            className="focus-bin"
                             {...provided.droppableProps}
                         >
                             {props.focusedBin.cards.map((card, index) => (
