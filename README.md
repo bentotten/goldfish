@@ -16,13 +16,28 @@ You can ssh between instances using
 
 #### Set up API ###
 
-Download Google SKD Shell from and make a new project:
+Download Google SKD Shell
+
+```wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-265.0.0-linux-x86_64.tar.gz```
+
+```tar -zxf google-cloud-sdk-*```
+
+```cd google-cloud-sdk```
+
+```./install.sh```
+
+Initialize SKD Shell and log in. Follow instructions to choose project and set time zone.
+
+```gcloud init```
+
+Upgrade SDK components
+
+```gcloud components update```
 
 Set Project
 ```gcloud config set project <PROJECT NAME>```
 
 Set login credentails
-
 ```gcloud auth application-default login```
 
 #### Set up App ####
@@ -34,7 +49,6 @@ Install npm, sqlite3, python3, pip3, and openssh-server
 ```sudo apt install npm```
 
 Load existing npm module
-
 ``` npm i```
 
 Start app at localhost:3000
@@ -47,12 +61,15 @@ To start a new project folder instead:
 
 ### Troubleshooting ###
 
-####The files do not transfer: Zone error####
+The files do not transfer: Zone error
 
 In the watcher.sh script, change 'us-west1-b' to the timezone of your database instance.
 
-####Error: Cannot find @google-cloud/compute:####
-Go to API setup to connect computer to google cloud
+Cannot Find @Google-cloud-compute: 
+
+Go to API setup instructions and reinstall google cloud sdk, then update componenets
+
+```gcloud components update```
 
 ### Scheduling algorithm 
 
