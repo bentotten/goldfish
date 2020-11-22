@@ -62,9 +62,6 @@ async function main(name = 'start-script-example') {
                 echo "installed dependencies" >> /var/www/log.txt
 
                 mkdir /var/www
-                git config --global credential.helper gcloud.sh
-                git -C /var/www clone ${repo}
-                echo "cloned repo" >> /var/www/log.txt
 
                 apt-get -y upgrade
                 echo "Startup-Ran" >> /var/www/log.txt
@@ -91,16 +88,24 @@ async function main(name = 'start-script-example') {
 
                 echo "created nodeapp user" >>/var/www/log.txt
 
+                # Fix NPM's issues
                 npm cache clean -f
                 npm install -g n
                 n stable
                 echo "Installed fresh npm" >>/var/www/log.txt
 
-                npm i --prefix /var/www/goldfish
+                # git repo and install dependencies
+                git config --global credential.helper gcloud.sh
+                # Clone repo and then install npm dependencies. && prevents async install of npm dep before repo is installed
+                git -C /var/www clone ${repo} && npm i --prefix /var/www/goldfish
+                echo "cloned repo" >> /var/www/log.txt
+
+                #npm i --prefix /var/www/goldfish
                 npm audit fix --prefix /var/www/goldfish
                 npm run build --prefix /var/www/goldfish
                 echo "website built" >>/var/www/log.txt
 
+# IMPORTANT! DO NOT FORMAT THESE LINES! CONFIG FILE CANNOT READ THE WHITE SPACE!
                 cat > /etc/supervisor/conf.d/node-app.conf <<EOF
 [program:nodeapp]
 directory=/var/www/goldfish
