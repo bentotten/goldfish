@@ -20,9 +20,11 @@ On your server instance, install and launch TMUX.
 ```sudo apt install TMUX```
 
 On your server instance, install inotify
-```sudo apt isntall inotify-tools```
+
+```sudo apt install inotify-tools```
 
 Open a new TMUX session and start the watcher API
+
 ```tmux```
 
 ```./watcher.sh```
