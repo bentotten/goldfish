@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Draggable } from "react-beautiful-dnd";
 import onClickOutside from "react-onclickoutside"; //Needed for 'click outside' events to function properly
-import "../styles/Card.css";
+import "../styles/card.css";
 
 class Card extends Component{
     constructor(props) {

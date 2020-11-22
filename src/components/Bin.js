@@ -1,5 +1,5 @@
 import { Droppable } from "react-beautiful-dnd";
-import "../styles/Bin.css";
+import "../styles/bin.css";
 import Card from "./Card"
 
 //Assumes that the cards will be passed in from the parent
