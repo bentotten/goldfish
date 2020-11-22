@@ -6,17 +6,15 @@ Full Stack WebApp for Scheduling and To-do lists.
 
 This webapp is currently hosted on Google Cloud at http://fullstack-project-goldfish.ipq.co/ using N1: f1-micro.
 
-This app is indended to be hosted on a google cloud instance and backup files to another google cloud instance. This requires SSH keys be generated and passed between the two instances. 
 Follow this tutorial to get started: https://cloud.google.com/compute/docs/tutorials/ssh-with-sk.
-
-You can ssh between instances using 
-```gcloud compute ssh <INSTANCE_NAME>```
 
 ### Setup ###
 
 #### Set up API ###
 
-Download Google SKD Shell
+::Linux::
+
+Open a terminal and download Google SKD Shell
 
 ```wget https://dl.google.com/dl/cloudsdk/channels/rapid/downloads/google-cloud-sdk-265.0.0-linux-x86_64.tar.gz```
 
@@ -63,6 +61,10 @@ Bind policy
  Setting the environment variable. PATH is where ever you stored the json key 
  ```export GOOGLE_APPLICATION_CREDENTIALS="[PATH]"```
 
+### SSH to App ### 
+
+From google cloud sdk
+```gcloud compute ssh goldfish-app --zone=us-west1-b```
 
 #### Set up App ####
 
@@ -78,10 +80,6 @@ Load existing npm module
 Start app at localhost:3000
 
 ```npm start```
-
-To start a new project folder instead:
-
-```npx create-react-app goldfish-app```
 
 ### Troubleshooting ###
 

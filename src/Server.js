@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const repo = 'https://github.com/bentotten/goldfish.git'
 
 // You must have a project already and your google account synced for this to work! See README.md
 
@@ -32,7 +33,7 @@ async function main(name = 'start-script-example') {
 
   testVM.exists(function (err, exists) {
     if(exists) {
-      console.log(`VM Instance exists`)
+      console.log(`VM Instance already exists`)
     }
 
     else if (!exists) {
@@ -52,27 +53,17 @@ async function main(name = 'start-script-example') {
               {
                 key: 'startup-script',
                 value: `#! /bin/bash
-              # Installs apache and a custom homepage
-              apt-get update
-              apt-get install -y apache2 inotify-tools tmux git npm
-              npm install -g npm@latest
-              git -C /home/ clone https://github.com/bentotten/goldfish.git
-              npcd m i --prefix /home/goldfish/
-              echo "Hello World" > /home/goldfish/test.txt
-              cat <<EOF > /home/goldfish/watcher.sh
-              #! /bin/bash
-              inotifywait -q -m -e close_write test.txt |
-              while read -r filename event; do
-                echo "Changes detected. Sending file..."         # or "./$filename"
-                gcloud compute scp test.txt db:~/test.txt --zone us-west1-b 
-                echo "Success"
-                echo "I'm working!" > ~/success.txt
-              done;
-              EOF
-              chmod 775 /home/goldfish/watcher.sh
-              nohup /home/goldfish/watcher.sh &
-
-              `,
+                export HOME=/root
+                # Installs apache and a custom homepage
+                apt-get update
+                apt-get install -y inotify-tools tmux git npm nginx build-essential supervisor
+                mkdir /var/www
+                git config --global credential.helper gcloud.sh
+                git -C /var/www clone ${repo}
+                apt-get -y upgrade
+                echo "Startup-Ran" > /var/www/log.txt
+                ./var/www/goldfish/backend/deployment.sh
+                `,
               },
             ],
           },
