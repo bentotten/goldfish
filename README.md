@@ -25,8 +25,13 @@ On database server, install sqlite
 
 Ensure you have the latest version of openssh
 
-```sudo apt install opensshr-server```
+```npm install express --save```
 
+```npm install browserify-fs --save```
+
+```npm install react-modal --save```
+
+```sudo apt install opensshr-server```
 
 Load existing npm module
 ``` npm i```

@@ -53,7 +53,7 @@ class Card extends Component{
                             {...provided.draggableProps}
                             className = "card">
                             <div className="card-header"
-                                onDoubleClick={this.handleDoubleClick}
+                                onDoubleClick={this.props.handleDoubleClick}
                                 {...provided.dragHandleProps}>
                                 <h1>{this.props.cardInfo.name}</h1>
                                 {provided.placeholder}
