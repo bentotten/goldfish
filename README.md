@@ -40,6 +40,30 @@ Set Project
 Set login credentails
 ```gcloud auth application-default login```
 
+#### Authenticate with Cloud ####
+
+Create service account:
+
+```gcloud iam service-accounts create service```
+ ** You can replace 'service' with whatever you would like your account name to be
+ 
+Get project ID
+
+```gcloud projects list```
+
+Bind policy
+ 
+ ```gcloud projects add-iam-policy-binding PROJECT_ID --member="serviceAccount:NAME@PROJECT_ID.iam.gserviceaccount.com" --role="roles/owner"```
+ 
+ Generate Key
+ 
+ ```gcloud iam service-accounts keys create FILE_NAME.json --iam-account=NAME@PROJECT_ID.iam.gserviceaccount.com```
+ 
+ 
+ Setting the environment variable. PATH is where ever you stored the json key 
+ ```export GOOGLE_APPLICATION_CREDENTIALS="[PATH]"```
+
+
 #### Set up App ####
 
 Setup instructions using npm.
