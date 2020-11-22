@@ -6,25 +6,32 @@ Full Stack WebApp for Scheduling and To-do lists.
 
 This webapp is currently hosted on Google Cloud at http://fullstack-project-goldfish.ipq.co/ using N1: f1-micro.
 
+This app is indended to be hosted on a google cloud instance and backup files to another google cloud instance. This requires SSH keys be generated and passed between the two instances. Follow this tutorial to get started: https://cloud.google.com/compute/docs/tutorials/ssh-with-sk.
+
+You can ssh between instances using 
+```gcloud compute ssh <INSTANCE_NAME>```
+
 ### Setup ###
 
-Setup instructions using npm and create-react-app.
+Setup instructions using npm.
 
-Install the create-react-app package, react-beautiful-dnd, and react-onclickoutside
+Install npm
 
-```npm install create-react-app```
+```sudo apt install npm```
 
-```npm install react-beautiful-dnd --save```
+On database server, install sqlite
 
-```npm install react-onclickoutside --save```
+```sudo apt install sqlite3```
 
-```npm install fs --save```
+Ensure you have the latest version of openssh
 
 ```npm install express --save```
 
 ```npm install browserify-fs --save```
 
 ```npm install react-modal --save```
+
+```sudo apt install opensshr-server```
 
 Load existing npm module
 ``` npm i```
