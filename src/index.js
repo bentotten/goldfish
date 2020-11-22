@@ -2,24 +2,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import { start } from './Server';
 
-/*
+
+
 ReactDOM.render(
   <React.StrictMode>
     <div id="golfish-root">
         <App />
-    </div>
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-*/
-
-
-ReactDOM.render(
-  <React.StrictMode>
-    <div id="goldfish-vm">
-      start();
     </div>
   </React.StrictMode>,
   document.getElementById('root')
