@@ -12,24 +12,17 @@ Follow this tutorial to get started: https://cloud.google.com/compute/docs/tutor
 You can ssh between instances using 
 ```gcloud compute ssh <INSTANCE_NAME>```
 
-## Setup ##
+### Setup ###
 
 #### Set up API ###
 
-On your server instance, install and launch tmux. 
-```sudo apt install tmux```
+Download Google SKD Shell from and make a new project:
 
-On your server instance, install inotify
+Set Project
+```gcloud config set project <PROJECT NAME>```
 
-```sudo apt install inotify-tools```
-
-Open a new TMUX session and start the watcher API
-
-```tmux new -s watcher```
-
-```./watcher.sh```
-
-Press `cntl-b d` to detach from this session and leave it running in the background. This will now pass files to the database whenever the app changes anything with the Task data. You can access this again with the `tmux a` command.
+Set login credentails
+```gcloud auth application-default login```
 
 #### Set up App ####
 
@@ -37,7 +30,7 @@ Setup instructions using npm.
 
 Install npm, sqlite3, python3, pip3, and openssh-server
 
-```sudo apt install npm sqlite3 python3 pip3 openssh-server```
+```sudo apt install npm```
 
 Load existing npm module
 ``` npm i```
@@ -107,7 +100,7 @@ This is the meta-list that stores, sorts, and is referenced for pulling the dail
 | quad4 [array of Task objs [] ] |
 | user [int] |
 
-### Daily To-Do object
+### Daily To-Do object ###
 
 This is the daily list of to-dos pulled from the priority categories of the master list (Ben found that 5 is a reasonable number, however this could be adjusted according to user preference). 
 
@@ -120,3 +113,7 @@ This is the daily list of to-dos pulled from the priority categories of the mast
 | item4 [Task obj] |
 | item5 [Task obj] |
 | user [int] | 
+
+### Tutorials ###
+
+https://googleapis.dev/nodejs/compute/latest/
