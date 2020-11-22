@@ -12,7 +12,7 @@ Follow this tutorial to get started: https://cloud.google.com/compute/docs/tutor
 You can ssh between instances using 
 ```gcloud compute ssh <INSTANCE_NAME>```
 
-### Setup ###
+## Setup ##
 
 #### Set up API ###
 
