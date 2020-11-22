@@ -4,9 +4,7 @@ import TaskBins from './components/TaskBins';
 import Header from './components/Header';
 import { DragDropContext } from "react-beautiful-dnd";
 import * as taskFunctions from './components/Functions';
-import { quickstart } from './Server';
 class App extends Component {
-  quickstart();
 
   constructor(props) {
     super(props);
