@@ -16,8 +16,8 @@ You can ssh between instances using
 
 #### Set up API ###
 
-On your server instance, install and launch TMUX. 
-```sudo apt install TMUX```
+On your server instance, install and launch tmux. 
+```sudo apt install tmux```
 
 On your server instance, install inotify
 
@@ -25,7 +25,7 @@ On your server instance, install inotify
 
 Open a new TMUX session and start the watcher API
 
-```tmux```
+```tmux new -s watcher```
 
 ```./watcher.sh```
 
@@ -35,23 +35,9 @@ Press `cntl-b d` to detach from this session and leave it running in the backgro
 
 Setup instructions using npm.
 
-Install npm
+Install npm, sqlite3, python3, pip3, and openssh-server
 
-```sudo apt install npm```
-
-On database server, install sqlite
-
-```sudo apt install sqlite3```
-
-On the Client server install python, pip, and cloud client libraries for python
-```sudo apt update && sudo apt install python python-pip -y```
-
-sudo apt update && sudo apt install python python-pip -y
-
-Ensure you have the latest version of openssh
-
-```sudo apt install opensshr-server```
-
+```sudo apt install npm sqlite3 python3 pip3 openssh-server```
 
 Load existing npm module
 ``` npm i```
