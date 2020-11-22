@@ -42,18 +42,18 @@ npm run build-prod #--prefix /var/www/goldfish
 echo "website built" >>/var/www/log.txt
 
 # Start nginx
-# cat <<EOF >/etc/nginx/sites-available/default
-#     server {
-#         listen 80 default_server;
-#        root /var/www/goldfish/build;
-#        server_name http://fullstack-project-goldfish.ipq.co/;
-#        index index.html index.htm;
-#        location /files/ {
-#            autoindex on;
-#            root /var/www/goldfish/;
-#        }
-#    }
-#EOF
+ cat <<EOF >/etc/nginx/sites-available/default
+     server {
+         listen 80 default_server;
+        root /var/www/goldfish/build;
+        server_name http://fullstack-project-goldfish.ipq.co/;
+        index index.html index.htm;
+        location /files/ {
+            autoindex on;
+            root /var/www/goldfish/;
+        }
+    }
+EOF
 
 # Configure supervisor to run the node app.
 cat <<EOF >/etc/supervisor/conf.d/node-app.conf
