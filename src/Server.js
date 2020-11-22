@@ -31,8 +31,11 @@ async function main(name = 'start-script-example') {
   const testVM = zone.vm(vmName);
 
   testVM.exists(function (err, exists) {
-    console.log(`VM: ${exists}`)
-    if (!exists) {
+    if(exists) {
+      console.log(`VM Instance exists`)
+    }
+
+    else if (!exists) {
       // Create a new VM 
       async function VM() {
 
