@@ -205,7 +205,7 @@ export const defaultCard = {
 //Ids for the other "bins"
 export const otherBins = {
   "adderBin": "-1",
-  "focusBin": "-2"
+  "focusedBin": "-2"
 }
 
 export const extraBins = [
