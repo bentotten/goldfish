@@ -12,6 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+
+// You must have a project already and your google account synced for this to work! See README.md
+
 'use strict';
 
 async function main(name = 'start-script-example') {
