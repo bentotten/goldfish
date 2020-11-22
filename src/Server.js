@@ -42,9 +42,6 @@ echo "Startup-Ran" >> /var/www/log.txt
 # Log
 echo "Starting Deployment" >>/var/www/log.txt
 
-# Go to proper dir
-cd /var/www/
-
 # Install nodejs
 mkdir /var/www/nodejs
 curl https://nodejs.org/dist/v8.12.0/node-v8.12.0-linux-x64.tar.gz | tar xvzf - -C /opt/nodejs --strip-components=1
@@ -68,13 +65,17 @@ echo "Installed fresh npm" >>/var/www/log.txt
 
 # git repo and install dependencies
 git config --global credential.helper gcloud.sh
-# Clone repo and then install npm dependencies. && prevents async install of npm dep before repo is installed
-git -C /var/www clone ${repo}
+# Clone repo and then install npm dependencies
+#git -C /var/www clone ${repo}
+git clone ${repo}
 echo "cloned repo" >> /var/www/log.txt
 
-npm i --prefix /var/www/goldfish
-npm audit fix --prefix /var/www/goldfish
-npm run build --prefix /var/www/goldfish
+# Go to proper dir
+cd goldfish
+
+npm i #--prefix /var/www/goldfish
+npm audit fix #--prefix /var/www/goldfish
+npm run build #--prefix /var/www/goldfish
 echo "website built" >>/var/www/log.txt
 
 # Setup nginx
