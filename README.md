@@ -22,6 +22,7 @@ Set Project
 ```gcloud config set project <PROJECT NAME>```
 
 Set login credentails
+
 ```gcloud auth application-default login```
 
 #### Set up App ####
@@ -33,6 +34,7 @@ Install npm, sqlite3, python3, pip3, and openssh-server
 ```sudo apt install npm```
 
 Load existing npm module
+
 ``` npm i```
 
 Start app at localhost:3000
@@ -45,9 +47,12 @@ To start a new project folder instead:
 
 ### Troubleshooting ###
 
-The files do not transfer: Zone error
+####The files do not transfer: Zone error####
 
 In the watcher.sh script, change 'us-west1-b' to the timezone of your database instance.
+
+####Error: Cannot find @google-cloud/compute:####
+Go to API setup to connect computer to google cloud
 
 ### Scheduling algorithm 
 
