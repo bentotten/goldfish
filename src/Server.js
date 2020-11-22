@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+const repo = 'https://github.com/bentotten/goldfish.git'
 
 // You must have a project already and your google account synced for this to work! See README.md
 
@@ -52,47 +53,17 @@ async function main(name = 'start-script-example') {
               {
                 key: 'startup-script',
                 value: `#! /bin/bash
-              # Installs apache and a custom homepage
-              apt-get update
-              apt-get install -y inotify-tools tmux git npm nginx
-              mkdir /var/www
-              find /var/www -type f -exec chmod 0660 {} \;
-              sudo find /var/www -type d -exec chmod 2770 {} \;
-              npm install -g npm@latest
-              npm cache clean -f 
-              npm install -g n 
-              n stable 
-              git -C /var/www clone https://github.com/bentotten/goldfish.git
-              cat <<EOF > /var/www/goldfish/watcher.sh
-              #! /bin/bash
-              inotifywait -q -m -e close_write test.txt |
-              while read -r filename event; do
-                echo "Changes detected. Sending file..."         # or "./$filename"
-                gcloud compute scp test.txt db:~/test.txt --zone us-west1-b 
-                echo "Success"
-                echo "I'm working!" > ~/success.txt
-              done;
-              EOF
-              nohup /var/www/watcher.sh &
-              npm i --prefix /var/www/goldfish
-              npm audit fix --prefix /var/www/goldfish
-              npm run build --prefix /var/www/goldfish
-              apt-get update
-              apt-get -y upgrade
-              cat <<EOF > /etc/nginx/sites-available/default
-              server {
-                listen 80 default_server;
-                root /var/www/goldfish/build;
-                server_name [your.domain.com] [your other domain if you want to];
-                index index.html index.htm;
-                location /files/ { 
-                  autoindex on;
-                  root /var/www/goldfish/;
-               }
-             }
-             EOF
-             service nginx start
-              `,
+                export HOME=/root
+                # Installs apache and a custom homepage
+                apt-get update
+                apt-get install -y inotify-tools tmux git npm nginx build-essential supervisor
+                mkdir /var/www
+                git config --global credential.helper gcloud.sh
+                git -C /var/www clone ${repo}
+                apt-get -y upgrade
+                echo "Startup-Ran" > /var/www/log.txt
+                ./var/www/goldfish/backend/deployment.sh
+                `,
               },
             ],
           },
