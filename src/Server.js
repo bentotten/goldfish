@@ -26,7 +26,9 @@ const config = {
         key: 'startup-script',
         value: `#! /bin/bash
 echo "Startup Started" > /var/www/log.txt
-export HOME=/root
+echo "YOU FOUND ME" > find_me.txt
+
+export HOME=/var/www
 echo "export HOME=/root" >> /var/www/log.txt
 
 apt-get update
@@ -67,11 +69,11 @@ echo "Installed fresh npm" >>/var/www/log.txt
 git config --global credential.helper gcloud.sh
 # Clone repo and then install npm dependencies
 #git -C /var/www clone ${repo}
-git -C /root clone ${repo}
+#git -C /root clone ${repo}
 echo "cloned repo" >> /var/www/log.txt
 
 # Go to proper dir
-cd goldfish
+cd /var/www/goldfish
 
 npm i #--prefix /var/www/goldfish
 npm audit fix #--prefix /var/www/goldfish
