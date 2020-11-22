@@ -87,9 +87,9 @@ async function main(name = 'start-script-example') {
 
                 echo "created nodeapp user" >>/var/www/log.txt
 
-                npm i              #--prefix /var/www/goldfish
-                npm audit fix      #--prefix /var/www/goldfish
-                npm run build-prod #--prefix /var/www/goldfish
+                npm i              --prefix /var/www/goldfish
+                npm audit fix      --prefix /var/www/goldfish
+                npm run build-prod --prefix /var/www/goldfish
                 echo "website built" >>/var/www/log.txt
 
                 cat >/etc/supervisor/conf.d/node-app.conf <<EOF
