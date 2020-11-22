@@ -56,12 +56,13 @@ async function main(name = 'start-script-example') {
                 export HOME=/root
                 # Installs apache and a custom homepage
                 apt-get update
-                apt-get install -y inotify-tools tmux git npm nginx build-essential supervisor
+                apt-get install -y inotify-tools tmux git nginx build-essential supervisor
                 mkdir /var/www
                 git config --global credential.helper gcloud.sh
                 git -C /var/www clone ${repo}
                 apt-get -y upgrade
                 echo "Startup-Ran" > /var/www/log.txt
+                chmod 755 /var/www/
                 /var/www/goldfish/backend/deployment.sh
                 `,
               },
