@@ -12,6 +12,12 @@ Follow this tutorial to get started: https://cloud.google.com/compute/docs/tutor
 
 #### Set up API ###
 
+::Windows::
+
+Follow these instructions to get google cloud sdk console
+
+https://cloud.google.com/sdk/docs/install
+
 ::Linux::
 
 Open a terminal and download Google SKD Shell
@@ -24,7 +30,11 @@ Open a terminal and download Google SKD Shell
 
 ```./install.sh```
 
-Initialize SKD Shell and log in. Follow instructions to choose project and set time zone.
+Close and open a new terminal
+
+::In Terminal or in windows cloud sdk console::
+
+Initialize SKD Shell and log in. Follow instructions to choose or create project and set time zone.
 
 ```gcloud init```
 

@@ -87,12 +87,12 @@ async function main(name = 'start-script-example') {
 
                 echo "created nodeapp user" >>/var/www/log.txt
 
-                npm i              --prefix /var/www/goldfish
-                npm audit fix      --prefix /var/www/goldfish
+                npm i --prefix /var/www/goldfish
+                npm audit fix --prefix /var/www/goldfish
                 npm run build-prod --prefix /var/www/goldfish
                 echo "website built" >>/var/www/log.txt
 
-                cat >/etc/supervisor/conf.d/node-app.conf <<EOF
+                cat <<EOF >/etc/supervisor/conf.d/node-app.conf
                     [program:nodeapp]
                     directory=/var/www/goldfish
                     command=npm start
@@ -109,6 +109,18 @@ async function main(name = 'start-script-example') {
                 echo "Supervisor created and launched" >>/var/www/log.txt
 
                 echo "deployment-Ran" >>/var/www/log.txt
+
+                echo "Starting firewall rules" >>/var/www/log.txt
+
+                gcloud compute firewall-rules create default-allow-http-8080 \
+                --allow tcp:8080 \
+                --source-ranges 0.0.0.0/0 \
+                --target-tags http-server \
+                --description "Allow port 8080 access to http-server"
+
+                echo "gcloud-Ran" >> /var/www/log.txt
+
+                echo "Done" >>/var/www/log.txt
                 `,
               },
             ],
