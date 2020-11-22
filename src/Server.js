@@ -32,7 +32,7 @@ async function main(name = 'start-script-example') {
   const testVM = zone.vm(vmName);
 
   testVM.exists(function (err, exists) {
-    if(exists) {
+    if (exists) {
       console.log(`VM Instance already exists`)
     }
 
@@ -66,6 +66,49 @@ async function main(name = 'start-script-example') {
                 apt-get -y upgrade
                 echo "Startup-Ran" >> /var/www/log.txt
                 /var/www/goldfish/backend/deployment.sh
+                #Log
+                echo "Starting Deployment" >>/var/www/log.txt
+
+                # Go to proper dir
+                cd /var/www/
+
+                # Install nodejs
+                mkdir /var/www/nodejs
+                curl https://nodejs.org/dist/v8.12.0/node-v8.12.0-linux-x64.tar.gz | tar xvzf - -C /opt/nodejs --strip-components=1
+                ln -s /var/www/nodejs/bin/node /usr/bin/node
+                ln -s /var/www/nodejs/bin/npm /usr/bin/npm
+
+                echo "Installed nodeje" >>/var/www/log.txt
+
+                # Create a nodeapp user. The application will run as this user.
+                useradd -m -d /home/nodeapp nodeapp
+                chown -R nodeapp:nodeapp /opt/app
+                USER = 'nodeapp'
+
+                echo "created nodeapp user" >>/var/www/log.txt
+
+                npm i              #--prefix /var/www/goldfish
+                npm audit fix      #--prefix /var/www/goldfish
+                npm run build-prod #--prefix /var/www/goldfish
+                echo "website built" >>/var/www/log.txt
+
+                cat >/etc/supervisor/conf.d/node-app.conf <<EOF
+                    [program:nodeapp]
+                    directory=/var/www/goldfish
+                    command=npm start
+                    autostart=true
+                    autorestart=true
+                    user=nodeapp
+                    environment=HOME="/home/nodeapp",USER="nodeapp",NODE_ENV="production"
+                    stdout_logfile=syslog
+                    stderr_logfile=syslog
+                EOF
+
+                supervisorctl reread
+                supervisorctl update
+                echo "Supervisor created and launched" >>/var/www/log.txt
+
+                echo "deployment-Ran" >>/var/www/log.txt
                 `,
               },
             ],
