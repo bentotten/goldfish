@@ -92,16 +92,16 @@ async function main(name = 'start-script-example') {
                 npm run build-prod --prefix /var/www/goldfish
                 echo "website built" >>/var/www/log.txt
 
-                cat <<EOF >/etc/supervisor/conf.d/node-app.conf
-                    [program:nodeapp]
-                    directory=/var/www/goldfish
-                    command=npm start
-                    autostart=true
-                    autorestart=true
-                    user=nodeapp
-                    environment=HOME="/home/nodeapp",USER="nodeapp",NODE_ENV="production"
-                    stdout_logfile=syslog
-                    stderr_logfile=syslog
+                cat > /etc/supervisor/conf.d/node-app.conf <<EOF
+                  [program:nodeapp]
+                  directory=/var/www/goldfish
+                  command=npm start
+                  autostart=true
+                  autorestart=true
+                  user=nodeapp
+                  environment=HOME="/home/nodeapp",USER="nodeapp",NODE_ENV="production"
+                  stdout_logfile=syslog
+                  stderr_logfile=syslog
                 EOF
 
                 supervisorctl reread
