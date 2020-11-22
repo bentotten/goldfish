@@ -23,8 +23,9 @@ On your server instance, install inotify
 ```sudo apt isntall inotify-tools```
 
 Open a new TMUX session and start the watcher API
-```tmux
-./watcher.sh```
+```tmux```
+
+```./watcher.sh```
 
 Press `cntl-b d` to detach from this session and leave it running in the background. This will now pass files to the database whenever the app changes anything with the Task data. You can access this again with the `tmux a` command.
 
