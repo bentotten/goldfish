@@ -53,16 +53,18 @@ async function main(name = 'start-script-example') {
               {
                 key: 'startup-script',
                 value: `#! /bin/bash
+                echo "Startup Started" > /var/www/log.txt
                 export HOME=/root
-                # Installs apache and a custom homepage
+                echo "export HOME=/root" >> /var/www/log.txt
                 apt-get update
                 apt-get install -y inotify-tools tmux git nginx build-essential supervisor
+                echo "installed dependencies" >> /var/www/log.txt
                 mkdir /var/www
                 git config --global credential.helper gcloud.sh
                 git -C /var/www clone ${repo}
+                echo "cloned repo" >> /var/www/log.txt
                 apt-get -y upgrade
-                echo "Startup-Ran" > /var/www/log.txt
-                chmod 755 /var/www/
+                echo "Startup-Ran" >> /var/www/log.txt
                 /var/www/goldfish/backend/deployment.sh
                 `,
               },
