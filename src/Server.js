@@ -26,10 +26,10 @@ const config = {
         key: 'startup-script',
         value: `#! /bin/bash
 echo "Startup Started" > /var/www/log.txt
-echo "YOU FOUND ME" > find_me.txt
 
 export HOME=/var/www
 echo "export HOME=/root" >> /var/www/log.txt
+echo "YOU FOUND ME" > ~/find_me.txt
 
 apt-get update
 apt-get install -y inotify-tools tmux git nginx build-essential supervisor npm
@@ -68,8 +68,8 @@ echo "Installed fresh npm" >>/var/www/log.txt
 # git repo and install dependencies
 git config --global credential.helper gcloud.sh
 # Clone repo and then install npm dependencies
-#git -C /var/www clone ${repo}
-#git -C /root clone ${repo}
+git -C /var/www clone ${repo}
+#git clone ${repo}
 echo "cloned repo" >> /var/www/log.txt
 
 # Go to proper dir
@@ -81,15 +81,15 @@ npm run build #--prefix /var/www/goldfish
 echo "website built" >>/var/www/log.txt
 
 # Setup nginx
-cat <<EOF >/etc/nginx/sites-available/default
+cat <<EOF >/etc/nginx/sites-available/fullstack-project-goldfish.ipq.co
 server {
   listen 80 default_server;
   root /var/www/goldfish/build;
-  server_name http://fullstack-project-goldfish.ipq.co/;
+  server_name fullstack-project-goldfish.ipq.co www.fullstack-project-goldfish.ipq.co;
   index index.html index.htm;
   location /files/ {
-  autoindex on;
-  root /var/www/goldfish/;
+    autoindex on;
+    root /var/www/goldfish/;
   }
 }
 EOF
