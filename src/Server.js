@@ -81,18 +81,20 @@ npm run build #--prefix /var/www/goldfish
 echo "website built" >>/var/www/log.txt
 
 # Setup nginx
-cat <<EOF >/etc/nginx/sites-available/default
+cat <<EOF >/etc/nginx/sites-available/goldfish.io
 server {
   listen 80 default_server;
   root /var/www/goldfish/build;
   server_name _;
-  index index.html index.htm;
+  index index.html;
   location /files/ {
     autoindex on;
     root /var/www/goldfish/;
   }
 }
 EOF
+
+sudo ln -s /etc/nginx/sites-available/goldfish.io /etc/nginx/sites-enabled
 
 # Setup supervisor config
         cat > /etc/supervisor/conf.d/node-app.conf <<EOF
