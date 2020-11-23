@@ -81,11 +81,11 @@ npm run build #--prefix /var/www/goldfish
 echo "website built" >>/var/www/log.txt
 
 # Setup nginx
-cat <<EOF >/etc/nginx/sites-available/fullstack-project-goldfish.ipq.co
+cat <<EOF >/etc/nginx/sites-available/default
 server {
   listen 80 default_server;
   root /var/www/goldfish/build;
-  server_name fullstack-project-goldfish.ipq.co www.fullstack-project-goldfish.ipq.co;
+  server_name _;
   index index.html index.htm;
   location /files/ {
     autoindex on;
