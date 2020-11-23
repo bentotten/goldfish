@@ -7,7 +7,7 @@ XDG_CONFIG_HOME = '${XDG_CONFIG_HOME}'
 
 // Config file and scripts to install on the new instance
 /******  IMPORTANT! DO NOT FORMAT THESE LINES! CONFIG FILE CANNOT READ THE WHITE SPACE!   *********/
-const old = {
+const config = {
   os: 'ubuntu',
   http: true,
   metadata: {
@@ -18,42 +18,39 @@ const old = {
 
 # Start setting root and install updates and tools
 mkdir /var/www
-#cat <<END >/var/www/script.sh
 echo "Startup Started" > /var/www/log.txt
-#export HOME=/var/www
+export HOME=/var/www
 cwd /var/www/
 echo "export HOME=/root" >> /var/www/log.txt
 echo "YOU FOUND ME" > ~/find_me.txt
 apt update
-#apt install -y inotify-tools tmux git nginx build-essential supervisor npm
-apt install -y npm git
+apt install -y inotify-tools tmux git nginx build-essential supervisor npm
 echo "installed dependencies" >> /var/www/log.txt
 apt -y upgrade
 echo "Startup-Ran" >> /var/www/log.txt
 echo "Starting Deployment" >>/var/www/log.txt
 
 # Install nodejs
-#mkdir /var/www/nodejs
-#curl https://nodejs.org/dist/v8.12.0/node-v8.12.0-linux-x64.tar.gz | tar xvzf - -C /opt/nodejs --strip-components=1
-#ln -s /var/www/nodejs/bin/node /usr/bin/node
-#ln -s /var/www/nodejs/bin/npm /usr/bin/npm
-#echo "Installed nodejs" >>/var/www/log.txt
+mkdir /var/www/nodejs
+curl https://nodejs.org/dist/v8.12.0/node-v8.12.0-linux-x64.tar.gz | tar xvzf - -C /opt/nodejs --strip-components=1
+ln -s /var/www/nodejs/bin/node /usr/bin/node
+ln -s /var/www/nodejs/bin/npm /usr/bin/npm
+echo "Installed nodejs" >>/var/www/log.txt
 
 # Create a nodeapp user. The application will run as this user.
-#useradd -m -d /home/nodeapp nodeapp
-#chown -R nodeapp:nodeapp /opt/app
-#USER = 'nodeapp'
-#sudo gpasswd -a "$USER" www-data
-#sudo chown -R "$USER":www-data /var/www
-#find /var/www -type f -exec chmod 0660 {} \;
-#sudo find /var/www -type d -exec chmod 2770 {} \;
-#echo "created nodeapp user" >>/var/www/log.txt
+useradd -m -d /home/nodeapp nodeapp
+chown -R nodeapp:nodeapp /var/www/
+USER = 'nodeapp'
+sudo gpasswd -a "$USER" www-data
+find /var/www -type f -exec chmod 0660 {} \;
+find /var/www -type d -exec chmod 2770 {} \;
+echo "created nodeapp user" >>/var/www/log.txt
 
 # Fix NPM's issues
-#npm cache clean -f
-#npm install -g n
-#n stable
-#echo "Installed fresh npm" >>/var/www/log.txt
+npm cache clean -f
+npm install -g n
+n lts
+echo "Installed fresh npm" >>/var/www/log.txt
 
 # Make template for githooks
 #cat <<EOF >/usr/share/git-core/templates/hooks/post-checkout
@@ -70,7 +67,7 @@ echo "Starting Deployment" >>/var/www/log.txt
 
 
 # git repo and install dependencies
-#git config --global credential.helper gcloud.sh
+git config --global credential.helper gcloud.sh
 git -C /var/www clone ${repo}
 cwd /var/www/goldfish
 # Set permissions for new githooks
@@ -81,33 +78,33 @@ cwd /var/www/goldfish
 #git -C /var/www/goldfish checkout temp
 #git -C /var/www/goldfish checkout main
 #git -C /var/www/goldfish -d temp
-#echo "cloned repo" >> /var/www/log.txt
+echo "cloned repo" >> /var/www/log.txt
 
 #npm install
 bash --login -c 'cd /var/www/goldfish ; npm i'
-#npm i --prefix /var/www/goldfish # trying with git hooks instead
-#npm audit fix --prefix /var/www/goldfish
-#npm run build --prefix /var/www/goldfish
+npm i --prefix /var/www/goldfish # trying with git hooks instead
+npm audit fix --prefix /var/www/goldfish
+npm run build --prefix /var/www/goldfish
 echo "website built" >>/var/www/log.txt
 
 # Setup nginx
-#cat <<EOF >/etc/nginx/sites-available/goldfish.io
-#server {
-  #  listen 80 default_server;
-  #root /var/www/goldfish/build;
-  #server_name _;
-  #index index.html;
-  #location /files/ {
-    #  autoindex on;
-    #root /var/www/goldfish/;
-    #}
-#}
-#EOF
+cat <<EOF >/etc/nginx/sites-available/goldfish.io
+server {
+    listen 80 default_server;
+  root /var/www/goldfish/build;
+  server_name _;
+  index index.html;
+  location /files/ {
+      autoindex on;
+    root /var/www/goldfish/;
+    }
+}
+EOF
 
-#sudo ln -s /etc/nginx/sites-available/goldfish.io /etc/nginx/sites-enabled
+sudo ln -s /etc/nginx/sites-available/goldfish.io /etc/nginx/sites-enabled
 
 # Setup supervisor config
-#        cat > /etc/supervisor/conf.d/node-app.conf <<EOF
+        #cat > /etc/supervisor/conf.d/node-app.conf <<EOF
 #[program:nginx]
 #command=/usr/sbin/nginx -g "daemon off;"
 #autostart=true
@@ -128,9 +125,9 @@ echo "website built" >>/var/www/log.txt
 #echo $(supervisorctl) >> /var/www/log.txt
 #echo "Supervisor created and launched" >>/var/www/log.txt
 
-#echo "deployment-Ran" >>/var/www/log.txt
+echo "deployment-Ran" >>/var/www/log.txt
 
-#echo "Starting firewall rules" >>/var/www/log.txt
+echo "Starting firewall rules" >>/var/www/log.txt
 
 #gcloud compute firewall-rules create default-allow-http-8080 \
 #--allow tcp:8080 \
@@ -140,32 +137,33 @@ echo "website built" >>/var/www/log.txt
 
 #echo "gcloud-Ran" >> /var/www/log.txt
 
-# Set systemd servive if all else fails lol
-#cat <<EOF > /etc/systemd/system/goldfish.service
-#[Unit]
-#Description=Golfish server
-
-#[Service]
-#Type=simple
-#WorkingDirectory=/var/www/goldfish
-#ExecStartPre=-/usr/bin/npm install
-#ExecStart=/usr/bin/npm install /var/www/goldfish
-
-#[Install]
-#WantedBy=multi-user.target
-#EOF
-
-#systemctl daemon-reload
-#systemctl start goldfish
-#systemctl enable goldfish
-
-#echo systemctl status goldfish >> /var/www/log.txt
-#echo "Done" >>/var/www/log.txt
-
-cat <<EOF > /var/www/goldfish/hail_mary.sh
+# Make install script
+cat <<EOF > /var/www/install.sh
 #!/bin/bash
 npm install
 EOF
+
+# Set systemd servive if all else fails lol
+cat <<EOF > /etc/systemd/system/goldfish.service
+[Unit]
+Description=Golfish server
+
+[Service]
+Type=simple
+WorkingDirectory=/var/www/
+#ExecStartPre=-/usr/bin/npm install
+ExecStart=/var/www/install.sh
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl start goldfish
+systemctl enable goldfish
+
+echo systemctl status goldfish >> /var/www/log.txt
+echo "Done" >>/var/www/log.txt
 
 
 `,
@@ -174,7 +172,7 @@ EOF
   },
 }
 
-const config = {
+const old = {
   os: 'ubuntu',
   http: true,
   zone: 'us-west1-b',
