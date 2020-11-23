@@ -1,6 +1,9 @@
 
 // Repo url
 const repo = 'https://github.com/bentotten/goldfish.git'
+XDG_CONFIG_HOME = '${XDG_CONFIG_HOME-}'
+HOME = '${HOME}'
+XDG_CONFIG_HOME = '${XDG_CONFIG_HOME}'
 
 // Config file and scripts to install on the new instance
 /******  IMPORTANT! DO NOT FORMAT THESE LINES! CONFIG FILE CANNOT READ THE WHITE SPACE!   *********/
@@ -17,7 +20,7 @@ const old = {
 mkdir /var/www
 #cat <<END >/var/www/script.sh
 echo "Startup Started" > /var/www/log.txt
-export HOME=/var/www
+#export HOME=/var/www
 cwd /var/www/
 echo "export HOME=/root" >> /var/www/log.txt
 echo "YOU FOUND ME" > ~/find_me.txt
@@ -183,23 +186,23 @@ const config = {
 apt update
 sudo timedatectl set-timezone America/Los_Angeles  # For some reason new instances have the wrong date-time
 systemctl restart systemd-timedated
-apt install -y npm git
-[ -d "/var/www" ] || mkdir -p /var/www
-git -C /var/www clone https://github.com/bentotten/goldfish
-cd /var/www/goldfish
 
-useradd -m -d /home/nodeapp nodeapp
-chown -R nodeapp:nodeapp /opt/app
-USER = 'nodeapp'
-sudo gpasswd -a "$USER" www-data
-sudo chown -R "$USER":www-data /var/www
-find /var/www -type f -exec chmod 0660 {} \;
-sudo find /var/www -type d -exec chmod 2770 {} \;
-su -c 'npm install --production --prefix /var/www/google' - nodeapp
-echo "done..." > log.txt
-git -C /var/www clone https://github.com/winterbe/react-samples
-cd /var/www/react-samples
-npm install
+apt install -y git
+[ -d "/var/www" ] || mkdir -p /var/www
+#export HOME=/var/www
+#cd /var/www/goldfish
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.0/install.sh | bash
+export NVM_DIR="$([ -z "${XDG_CONFIG_HOME}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+nvm install node
+echo command -v nvm >> /var/www/log.txt
+
+git -C /var/www clone https://github.com/bentotten/goldfish
+npm install --prefix /var/www/goldfish
+
+#Sample website
+git -C /var/www clone https://github.com/prismicio/reactjs-website
+npm install --prefix /var/www/reactjs-websit
         `,
       },
     ],
