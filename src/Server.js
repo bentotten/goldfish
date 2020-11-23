@@ -4,7 +4,7 @@ const repo = 'https://github.com/bentotten/goldfish.git'
 
 // Config file and scripts to install on the new instance
 /******  IMPORTANT! DO NOT FORMAT THESE LINES! CONFIG FILE CANNOT READ THE WHITE SPACE!   *********/
-const config = {
+const old = {
   os: 'ubuntu',
   http: true,
   metadata: {
@@ -138,32 +138,75 @@ echo "website built" >>/var/www/log.txt
 #echo "gcloud-Ran" >> /var/www/log.txt
 
 # Set systemd servive if all else fails lol
-cat <<EOF > /etc/systemd/system/goldfish.service
-[Unit]
-Description=Golfish server
+#cat <<EOF > /etc/systemd/system/goldfish.service
+#[Unit]
+#Description=Golfish server
 
-[Service]
-Type=simple
-WorkingDirectory=/var/www/goldfish
-ExecStartPre=-/usr/bin/npm install
-ExecStart=/usr/bin/npm run /var/www/goldfish
+#[Service]
+#Type=simple
+#WorkingDirectory=/var/www/goldfish
+#ExecStartPre=-/usr/bin/npm install
+#ExecStart=/usr/bin/npm install /var/www/goldfish
 
-[Install]
-WantedBy=multi-user.target
+#[Install]
+#WantedBy=multi-user.target
+#EOF
+
+#systemctl daemon-reload
+#systemctl start goldfish
+#systemctl enable goldfish
+
+#echo systemctl status goldfish >> /var/www/log.txt
+#echo "Done" >>/var/www/log.txt
+
+cat <<EOF > /var/www/goldfish/hail_mary.sh
+#!/bin/bash
+npm install
 EOF
 
-systemctl daemon-reload
-systemctl start goldfish
-systemctl enable goldfish
-
-echo systemctl status goldfish >> /var/www/log.txt
-echo "Done" >>/var/www/log.txt
 
 `,
       },
     ],
   },
 }
+
+const config = {
+  os: 'ubuntu',
+  http: true,
+  zone: 'us-west1-b',
+  metadata: {
+    items: [
+      {
+        key: 'startup-script',
+        value: `#! /bin/bash
+apt update
+sudo timedatectl set-timezone America/Los_Angeles  # For some reason new instances have the wrong date-time
+systemctl restart systemd-timedated
+apt install -y npm git
+[ -d "/var/www" ] || mkdir -p /var/www
+git -C /var/www clone https://github.com/bentotten/goldfish
+cd /var/www/goldfish
+
+useradd -m -d /home/nodeapp nodeapp
+chown -R nodeapp:nodeapp /opt/app
+USER = 'nodeapp'
+sudo gpasswd -a "$USER" www-data
+sudo chown -R "$USER":www-data /var/www
+find /var/www -type f -exec chmod 0660 {} \;
+sudo find /var/www -type d -exec chmod 2770 {} \;
+su -c 'npm install --production --prefix /var/www/google' - nodeapp
+echo "done..." > log.txt
+git -C /var/www clone https://github.com/winterbe/react-samples
+cd /var/www/react-samples
+npm install
+        `,
+      },
+    ],
+  },
+}
+
+
 
 // You must have a project already and your google account synced for this to work! See README.md
 
