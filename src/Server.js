@@ -75,9 +75,10 @@ echo "cloned repo" >> /var/www/log.txt
 # Go to proper dir
 cd /var/www/goldfish
 
-npm i #--prefix /var/www/goldfish
-npm audit fix #--prefix /var/www/goldfish
-npm run build #--prefix /var/www/goldfish
+# npm i --prefix /var/www/goldfish # trying with git hooks instead
+git -C /var/www/goldfish pull
+npm audit fix --prefix /var/www/goldfish
+npm run build --prefix /var/www/goldfish
 echo "website built" >>/var/www/log.txt
 
 # Setup nginx
