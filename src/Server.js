@@ -50,6 +50,10 @@ echo "Installed nodejs" >>/var/www/log.txt
 useradd -m -d /home/nodeapp nodeapp
 chown -R nodeapp:nodeapp /opt/app
 USER = 'nodeapp'
+sudo gpasswd -a "$USER" www-data
+sudo chown -R "$USER":www-data /var/www
+find /var/www -type f -exec chmod 0660 {} \;
+sudo find /var/www -type d -exec chmod 2770 {} \;
 echo "created nodeapp user" >>/var/www/log.txt
 
 # Fix NPM's issues
@@ -65,6 +69,9 @@ npm install
 echo "I Worked!" > /var/www/success.txt
 EOF
 
+# Set permissions for new githooks
+find /var/www/goldfish/.git/hooks -type f -exec chmod 2770 {} \;
+
 # git repo and install dependencies
 git config --global credential.helper gcloud.sh
 git -C /var/www clone ${repo}
@@ -76,10 +83,11 @@ echo "cloned repo" >> /var/www/log.txt
 cat <<EOF >/var/www/goldfish/.git/hooks/post-merge
 #!/bin/sh
 npm install
+echo "I Worked!" > /var/www/success.txt
 EOF
 
 # Go to proper dir and run npm
-cd /var/www/goldfish
+cwd /var/www/goldfish
 
 # npm i --prefix /var/www/goldfish # trying with git hooks instead
 npm audit fix --prefix /var/www/goldfish
