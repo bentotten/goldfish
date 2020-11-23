@@ -183,26 +183,36 @@ const config = {
       {
         key: 'startup-script',
         value: `#! /bin/bash
-apt update
+# Install dependencies from apt
+apt-get update
+apt-get install -yq ca-certificates git build-essential supervisor
 sudo timedatectl set-timezone America/Los_Angeles  # For some reason new instances have the wrong date-time
 systemctl restart systemd-timedated
 
-apt install -y git
-[ -d "/var/www" ] || mkdir -p /var/www
-#export HOME=/var/www
-#cd /var/www/goldfish
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.37.0/install.sh | bash
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
-nvm install node
-echo command -v nvm >> /var/www/log.txt
+# Install nodejs
+mkdir /opt/nodejs
+cd /opt/nodejs
+curl -L https://raw.githubusercontent.com/tj/n/master/bin/n -o n
+bash n lts
+ln -s /opt/nodejs/bin/node /usr/bin/node
+ln -s /opt/nodejs/bin/npm /usr/bin/npm
 
-git -C /var/www clone https://github.com/bentotten/goldfish
-npm install --prefix /var/www/goldfish
+# Clone repo
+apt install -y git
+export HOME=/root
+git config --global credential.helper gcloud.sh
+mkdir /op/app
+#git -C /opt/app/ clone https://github.com/bentotten/goldfish
+
+
+# Make dir and symlink it
+git -C /var/www/ clone https://github.com/bentotten/goldfish
+npm install
+
 
 #Sample website
 git -C /var/www clone https://github.com/prismicio/reactjs-website
-npm install --prefix /var/www/reactjs-websit
+npm install --prefix /var/www/reactjs-website
         `,
       },
     ],
