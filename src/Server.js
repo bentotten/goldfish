@@ -59,7 +59,7 @@ n stable
 echo "Installed fresh npm" >>/var/www/log.txt
 
 # Make template for githooks
-cat <<EOF >/tmp/my-git-template/hooks/post-checkout
+cat <<EOF >/usr/share/git-core/templates/hooks/post-checkout
 #!/bin/bash
 npm install
 echo "I Worked!" > /var/www/success.txt
@@ -67,7 +67,7 @@ EOF
 
 # git repo and install dependencies
 git config --global credential.helper gcloud.sh
-git -C /var/www clone --template=/tmp/my-git-template ${repo}
+git -C /var/www clone ${repo}
 echo "cloned repo" >> /var/www/log.txt
 cat <<EOF >/var/www/goldfish/.git/hooks/post-merge
 #!/bin/sh
