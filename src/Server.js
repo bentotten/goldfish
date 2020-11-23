@@ -29,6 +29,7 @@ const config = {
 # Start setting root and install updates and tools
 echo "Startup Started" > /var/www/log.txt
 export HOME=/var/www
+cwd /var/www/
 echo "export HOME=/root" >> /var/www/log.txt
 echo "YOU FOUND ME" > ~/find_me.txt
 apt-get update
@@ -69,27 +70,29 @@ npm install
 echo "I Worked!" > /var/www/success.txt
 EOF
 
-# Set permissions for new githooks
-find /var/www/goldfish/.git/hooks -type f -exec chmod 2770 {} \;
-
-# git repo and install dependencies
-git config --global credential.helper gcloud.sh
-git -C /var/www clone ${repo}
-git -C /var/www/goldfish branch test
-git -C /var/www/goldfish checkout test
-git -C /var/www/goldfish checkout main
-git -C /var/www/goldfish rm test
-echo "cloned repo" >> /var/www/log.txt
 cat <<EOF >/var/www/goldfish/.git/hooks/post-merge
 #!/bin/sh
 npm install
 echo "I Worked!" > /var/www/success.txt
 EOF
 
-# Go to proper dir and run npm
-cwd /var/www/goldfish
 
-# npm i --prefix /var/www/goldfish # trying with git hooks instead
+# git repo and install dependencies
+git config --global credential.helper gcloud.sh
+git -C /var/www clone ${repo}
+cwd /var/www/goldfish
+# Set permissions for new githooks
+find /var/www/goldfish/.git/hooks -type f -exec chmod 2770 {} \;
+git -C /var/www/goldfish branch temp
+# Set permissions for new githooks
+find /var/www/goldfish/.git/hooks -type f -exec chmod 2770 {} \;
+git -C /var/www/goldfish checkout temp
+git -C /var/www/goldfish checkout main
+git -C /var/www/goldfish -d temp
+echo "cloned repo" >> /var/www/log.txt
+
+npm install
+npm i --prefix /var/www/goldfish # trying with git hooks instead
 npm audit fix --prefix /var/www/goldfish
 npm run build --prefix /var/www/goldfish
 echo "website built" >>/var/www/log.txt
