@@ -68,6 +68,10 @@ EOF
 # git repo and install dependencies
 git config --global credential.helper gcloud.sh
 git -C /var/www clone ${repo}
+git -C /var/www/goldfish branch test
+git -C /var/www/goldfish checkout test
+git -C /var/www/goldfish checkout main
+git -C /var/www/goldfish rm test
 echo "cloned repo" >> /var/www/log.txt
 cat <<EOF >/var/www/goldfish/.git/hooks/post-merge
 #!/bin/sh
