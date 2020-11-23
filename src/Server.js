@@ -20,7 +20,6 @@ const repo = 'https://github.com/bentotten/goldfish.git'
 const config = {
   os: 'ubuntu',
   http: true,
-  machineType: zones/us-central1-f/machineTypes/n1-standard-16,
   metadata: {
     items: [
       {
@@ -28,127 +27,131 @@ const config = {
         value: `#! /bin/bash
 
 # Start setting root and install updates and tools
+mkdir /var/www
+cat <<END >/var/www/script.sh
 echo "Startup Started" > /var/www/log.txt
 export HOME=/var/www
 cwd /var/www/
 echo "export HOME=/root" >> /var/www/log.txt
 echo "YOU FOUND ME" > ~/find_me.txt
-apt-get update
-apt-get install -y inotify-tools tmux git nginx build-essential supervisor npm
+apt update
+#apt install -y inotify-tools tmux git nginx build-essential supervisor npm
+apt install -y npm git
 echo "installed dependencies" >> /var/www/log.txt
-mkdir /var/www
-apt-get -y upgrade
+apt -y upgrade
 echo "Startup-Ran" >> /var/www/log.txt
 echo "Starting Deployment" >>/var/www/log.txt
 
 # Install nodejs
-mkdir /var/www/nodejs
-curl https://nodejs.org/dist/v8.12.0/node-v8.12.0-linux-x64.tar.gz | tar xvzf - -C /opt/nodejs --strip-components=1
-ln -s /var/www/nodejs/bin/node /usr/bin/node
-ln -s /var/www/nodejs/bin/npm /usr/bin/npm
-echo "Installed nodejs" >>/var/www/log.txt
+#mkdir /var/www/nodejs
+#curl https://nodejs.org/dist/v8.12.0/node-v8.12.0-linux-x64.tar.gz | tar xvzf - -C /opt/nodejs --strip-components=1
+#ln -s /var/www/nodejs/bin/node /usr/bin/node
+#ln -s /var/www/nodejs/bin/npm /usr/bin/npm
+#echo "Installed nodejs" >>/var/www/log.txt
 
 # Create a nodeapp user. The application will run as this user.
-useradd -m -d /home/nodeapp nodeapp
-chown -R nodeapp:nodeapp /opt/app
-USER = 'nodeapp'
-sudo gpasswd -a "$USER" www-data
-sudo chown -R "$USER":www-data /var/www
-find /var/www -type f -exec chmod 0660 {} \;
-sudo find /var/www -type d -exec chmod 2770 {} \;
-echo "created nodeapp user" >>/var/www/log.txt
+#useradd -m -d /home/nodeapp nodeapp
+#chown -R nodeapp:nodeapp /opt/app
+#USER = 'nodeapp'
+#sudo gpasswd -a "$USER" www-data
+#sudo chown -R "$USER":www-data /var/www
+#find /var/www -type f -exec chmod 0660 {} \;
+#sudo find /var/www -type d -exec chmod 2770 {} \;
+#echo "created nodeapp user" >>/var/www/log.txt
 
 # Fix NPM's issues
-npm cache clean -f
-npm install -g n
-n stable
-echo "Installed fresh npm" >>/var/www/log.txt
+#npm cache clean -f
+#npm install -g n
+#n stable
+#echo "Installed fresh npm" >>/var/www/log.txt
 
 # Make template for githooks
-cat <<EOF >/usr/share/git-core/templates/hooks/post-checkout
+#cat <<EOF >/usr/share/git-core/templates/hooks/post-checkout
 #!/bin/bash
-npm install
-echo "I Worked!" > /var/www/success.txt
-EOF
+#npm install
+#echo "I Worked!" > /var/www/success.txt
+#EOF
 
-cat <<EOF >/var/www/goldfish/.git/hooks/post-merge
+#cat <<EOF >/var/www/goldfish/.git/hooks/post-merge
 #!/bin/sh
-npm install
-echo "I Worked!" > /var/www/success.txt
-EOF
+#npm install
+#echo "I Worked!" > /var/www/success.txt
+#EOF
 
 
 # git repo and install dependencies
-git config --global credential.helper gcloud.sh
+#git config --global credential.helper gcloud.sh
 git -C /var/www clone ${repo}
 cwd /var/www/goldfish
 # Set permissions for new githooks
-find /var/www/goldfish/.git/hooks -type f -exec chmod 2770 {} \;
-git -C /var/www/goldfish branch temp
+#find /var/www/goldfish/.git/hooks -type f -exec chmod 2770 {} \;
+#git -C /var/www/goldfish branch temp
 # Set permissions for new githooks
-find /var/www/goldfish/.git/hooks -type f -exec chmod 2770 {} \;
-git -C /var/www/goldfish checkout temp
-git -C /var/www/goldfish checkout main
-git -C /var/www/goldfish -d temp
-echo "cloned repo" >> /var/www/log.txt
+#find /var/www/goldfish/.git/hooks -type f -exec chmod 2770 {} \;
+#git -C /var/www/goldfish checkout temp
+#git -C /var/www/goldfish checkout main
+#git -C /var/www/goldfish -d temp
+#echo "cloned repo" >> /var/www/log.txt
 
-npm install
-npm i --prefix /var/www/goldfish # trying with git hooks instead
-npm audit fix --prefix /var/www/goldfish
-npm run build --prefix /var/www/goldfish
+#npm install
+bash --login -c 'cd /var/www/goldfish ; npm i'
+#npm i --prefix /var/www/goldfish # trying with git hooks instead
+#npm audit fix --prefix /var/www/goldfish
+#npm run build --prefix /var/www/goldfish
 echo "website built" >>/var/www/log.txt
 
 # Setup nginx
-cat <<EOF >/etc/nginx/sites-available/goldfish.io
-server {
-  listen 80 default_server;
-  root /var/www/goldfish/build;
-  server_name _;
-  index index.html;
-  location /files/ {
-    autoindex on;
-    root /var/www/goldfish/;
-  }
-}
-EOF
+#cat <<EOF >/etc/nginx/sites-available/goldfish.io
+#server {
+  #  listen 80 default_server;
+  #root /var/www/goldfish/build;
+  #server_name _;
+  #index index.html;
+  #location /files/ {
+    #  autoindex on;
+    #root /var/www/goldfish/;
+    #}
+#}
+#EOF
 
-sudo ln -s /etc/nginx/sites-available/goldfish.io /etc/nginx/sites-enabled
+#sudo ln -s /etc/nginx/sites-available/goldfish.io /etc/nginx/sites-enabled
 
 # Setup supervisor config
-        cat > /etc/supervisor/conf.d/node-app.conf <<EOF
-[program:nginx]
-command=/usr/sbin/nginx -g "daemon off;"
-autostart=true
-autorestart=true
-numprocs=1
-startsecs=0
-process_name=%(program_name)s_%(process_num)02d
-user=nodeapp
-environment=HOME="/home/nodeapp",USER="nodeapp",NODE_ENV="production"
-stderr_logfile=/var/log/supervisor/%(program_name)s_stderr.log
-stderr_logfile_maxbytes=10MB
-stdout_logfile=/var/log/supervisor/%(program_name)s_stdout.log
-stdout_logfile_maxbytes=10MB
-EOF
+#        cat > /etc/supervisor/conf.d/node-app.conf <<EOF
+#[program:nginx]
+#command=/usr/sbin/nginx -g "daemon off;"
+#autostart=true
+#autorestart=true
+#numprocs=1
+#startsecs=0
+##process_name=%(program_name)s_%(process_num)02d
+#user=nodeapp
+#environment=HOME="/home/nodeapp",USER="nodeapp",NODE_ENV="production"
+#stderr_logfile=/var/log/supervisor/%(program_name)s_stderr.log
+#stderr_logfile_maxbytes=10MB
+#stdout_logfile=/var/log/supervisor/%(program_name)s_stdout.log
+#stdout_logfile_maxbytes=10MB
+#EOF
 
-supervisorctl reread
-supervisorctl update
-echo $(supervisorctl) >> /var/www/log.txt
-echo "Supervisor created and launched" >>/var/www/log.txt
+#supervisorctl reread
+#supervisorctl update
+#echo $(supervisorctl) >> /var/www/log.txt
+#echo "Supervisor created and launched" >>/var/www/log.txt
 
-echo "deployment-Ran" >>/var/www/log.txt
+#echo "deployment-Ran" >>/var/www/log.txt
 
-echo "Starting firewall rules" >>/var/www/log.txt
+#echo "Starting firewall rules" >>/var/www/log.txt
 
-gcloud compute firewall-rules create default-allow-http-8080 \
---allow tcp:8080 \
---source-ranges 0.0.0.0/0 \
---target-tags http-server \
---description "Allow port 8080 access to http-server"
+#gcloud compute firewall-rules create default-allow-http-8080 \
+#--allow tcp:8080 \
+#--source-ranges 0.0.0.0/0 \
+#--target-tags http-server \
+#--description "Allow port 8080 access to http-server"
 
-echo "gcloud-Ran" >> /var/www/log.txt
+#echo "gcloud-Ran" >> /var/www/log.txt
 
 echo "Done" >>/var/www/log.txt
+END
 `,
       },
     ],
