@@ -138,7 +138,7 @@ echo "website built" >>/var/www/log.txt
 #echo "gcloud-Ran" >> /var/www/log.txt
 
 # Set systemd servive if all else fails lol
-#cat <<EOF > /etc/systemd/system/goldfish.service
+cat <<EOF > /etc/systemd/system/goldfish.service
 [Unit]
 Description=Golfish server
 
@@ -151,6 +151,7 @@ ExecStart=/usr/bin/npm run /var/www/goldfish
 [Install]
 WantedBy=multi-user.target
 EOF
+
 systemctl daemon-reload
 systemctl start goldfish
 systemctl enable goldfish
