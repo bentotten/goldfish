@@ -1,16 +1,3 @@
-// Copyright 2018 Google LLC
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-//      http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
 
 // Repo url
 const repo = 'https://github.com/bentotten/goldfish.git'
@@ -28,7 +15,7 @@ const config = {
 
 # Start setting root and install updates and tools
 mkdir /var/www
-cat <<END >/var/www/script.sh
+#cat <<END >/var/www/script.sh
 echo "Startup Started" > /var/www/log.txt
 export HOME=/var/www
 cwd /var/www/
@@ -150,8 +137,27 @@ echo "website built" >>/var/www/log.txt
 
 #echo "gcloud-Ran" >> /var/www/log.txt
 
+# Set systemd servive if all else fails lol
+#cat <<EOF > /etc/systemd/system/goldfish.service
+[Unit]
+Description=Golfish server
+
+[Service]
+Type=simple
+WorkingDirectory=/var/www/goldfish
+ExecStartPre=-/usr/bin/npm install
+ExecStart=/usr/bin/npm run /var/www/goldfish
+
+[Install]
+WantedBy=multi-user.target
+EOF
+systemctl daemon-reload
+systemctl start goldfish
+systemctl enable goldfish
+
+echo systemctl status goldfish >> /var/www/log.txt
 echo "Done" >>/var/www/log.txt
-END
+
 `,
       },
     ],
