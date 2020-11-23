@@ -4,10 +4,10 @@ import "../styles/TaskBins.css";
 
 class TaskBins extends Component {
 
-  constructor(props) {
+/*  constructor(props) {
     super(props);
   }
-
+*/
   render() { 
     return (
         <div className="TaskBins">
