@@ -25,23 +25,18 @@ const config = {
       {
         key: 'startup-script',
         value: `#! /bin/bash
-echo "Startup Started" > /var/www/log.txt
 
+# Start setting root and install updates and tools
+echo "Startup Started" > /var/www/log.txt
 export HOME=/var/www
 echo "export HOME=/root" >> /var/www/log.txt
 echo "YOU FOUND ME" > ~/find_me.txt
-
 apt-get update
 apt-get install -y inotify-tools tmux git nginx build-essential supervisor npm
 echo "installed dependencies" >> /var/www/log.txt
-
 mkdir /var/www
-
 apt-get -y upgrade
 echo "Startup-Ran" >> /var/www/log.txt
-
-#/var/www/goldfish/backend/deployment.sh
-# Log
 echo "Starting Deployment" >>/var/www/log.txt
 
 # Install nodejs
@@ -49,14 +44,12 @@ mkdir /var/www/nodejs
 curl https://nodejs.org/dist/v8.12.0/node-v8.12.0-linux-x64.tar.gz | tar xvzf - -C /opt/nodejs --strip-components=1
 ln -s /var/www/nodejs/bin/node /usr/bin/node
 ln -s /var/www/nodejs/bin/npm /usr/bin/npm
-
 echo "Installed nodejs" >>/var/www/log.txt
 
 # Create a nodeapp user. The application will run as this user.
 useradd -m -d /home/nodeapp nodeapp
 chown -R nodeapp:nodeapp /opt/app
 USER = 'nodeapp'
-
 echo "created nodeapp user" >>/var/www/log.txt
 
 # Fix NPM's issues
@@ -65,18 +58,26 @@ npm install -g n
 n stable
 echo "Installed fresh npm" >>/var/www/log.txt
 
+# Make template for githooks
+cat <<EOF >/tmp/my-git-template/hooks/post-checkout
+#!/bin/bash
+npm install
+echo "I Worked!" > /var/www/success.txt
+EOF
+
 # git repo and install dependencies
 git config --global credential.helper gcloud.sh
-# Clone repo and then install npm dependencies
-git -C /var/www clone ${repo}
-#git clone ${repo}
+git -C /var/www clone --template=/tmp/my-git-template ${repo}
 echo "cloned repo" >> /var/www/log.txt
+cat <<EOF >/var/www/goldfish/.git/hooks/post-merge
+#!/bin/sh
+npm install
+EOF
 
-# Go to proper dir
+# Go to proper dir and run npm
 cd /var/www/goldfish
 
 # npm i --prefix /var/www/goldfish # trying with git hooks instead
-git -C /var/www/goldfish pull
 npm audit fix --prefix /var/www/goldfish
 npm run build --prefix /var/www/goldfish
 echo "website built" >>/var/www/log.txt
