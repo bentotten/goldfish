@@ -20,7 +20,7 @@ const repo = 'https://github.com/bentotten/goldfish.git'
 const config = {
   os: 'ubuntu',
   http: true,
-  machineType: n1-standard-16,
+  machineType: zones/us-central1-f/machineTypes/n1-standard-16,
   metadata: {
     items: [
       {
