@@ -25,6 +25,7 @@ function Header(props) {
                                           draggableId={props.cardList[props.adderBin.cards[0]]._id} 
                                           index={0} 
                                           cardInfo={props.cardList[props.adderBin.cards[0]]}
+                                          handleCardEdit={props.handleCardEdit}
                                     /> 
                                     }   
                                     {provided.placeholder}

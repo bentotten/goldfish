@@ -33,6 +33,7 @@ class App extends Component {
     this.handleScroll = this.handleScroll.bind(this);
     this.onBinEnter = this.onBinEnter.bind(this); 
     this.onBinLeave = this.onBinLeave.bind(this); 
+    this.handleCardEdit = this.handleCardEdit.bind(this);
   }
 
   //Called only once (after mounted onto DOM)
@@ -175,10 +176,6 @@ class App extends Component {
   handleScroll(e) {
 
     if (this.state.allowHorizontalScroll === true) {
-      //console.log('Scroll!');
-      //console.log(e);
-  
-      console.log(document.getElementById('TaskBins'));
       document.getElementById('TaskBins').scrollLeft += (e.deltaY / Math.abs(e.deltaY)) * 50;
     }
  }
@@ -232,6 +229,32 @@ class App extends Component {
     });
   }
 
+  //Is called when a handle change event is called on a card (a card is being edited)
+  handleCardEdit(cardId, targetName, targetValue) {
+
+    let newList = this.state.cardList;
+    let newCard = newList.find(x => x._id === cardId);
+    
+    switch (targetName.className) {
+
+      case 'headerLabel':
+        newCard.name = targetValue;
+        break;
+
+      case 'priority':
+        newCard.quad = targetValue;
+        break;
+
+      default:
+        //Shouldn't be here!
+        break;
+    }
+
+    this.setState({
+      cardList: newList
+    })
+  }
+
   render() { 
     return (
       <DragDropContext
@@ -245,6 +268,7 @@ class App extends Component {
                 closeNewTask={this.closeNewTask}
                 adderBin={this.state.adderBin}
                 cardList={this.state.cardList}
+                handleCardEdit={this.handleCardEdit}
         />
         </div>
         <div className="App">
@@ -263,6 +287,7 @@ class App extends Component {
                   cardList={this.state.cardList}
                   onBinEnter={this.onBinEnter}
                   onBinLeave={this.onBinLeave}
+                  handleCardEdit={this.handleCardEdit}
               />
           ))}
           </div>
@@ -272,6 +297,7 @@ class App extends Component {
                         closeMaker={this.closeFocusBin}
                         focusedBin={this.state.focusedBin}
                         cardList={this.state.cardList}
+                        handleCardEdit={this.handleCardEdit}
             />
           </div>
           <div className="Today-button">

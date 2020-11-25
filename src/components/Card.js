@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Draggable } from "react-beautiful-dnd";
-import ContentEditable from 'react-contenteditable';
 import onClickOutside from "react-onclickoutside"; //Needed for 'click outside' events to function properly
 import "../styles/Card.css";
 import * as taskFunctions from './Functions';
@@ -18,7 +17,6 @@ class Card extends Component{
         this.handleChange = this.handleChange.bind(this);
         this.handleDoubleClick = this.handleDoubleClick.bind(this);
         this.handleClickOutside = this.handleClickOutside.bind(this);
-        //console.log(this.props);
     }
 
     //Set the wrapper ref
@@ -26,21 +24,19 @@ class Card extends Component{
         this.wrapperRef = node;
     }
 
-    //Handles any changes to the card
+    //Pushes any changes up
     handleChange(e) {
-        this.setState({ [e.target.name] : e.target.value });
+        this.props.handleCardEdit(this.props.draggableId, e.target, e.target.value);
     }
 
-    //Handles double clicking to open card for details
+    //Handles double clicking to open card for editing
     handleDoubleClick(e) {
         this.setState({ edit: true });
-        //console.log('double clicked!');
     }
 
     //Handles clicking outside card
     handleClickOutside(e) {
         this.setState({ edit: false });
-        //console.log('clicked outside!');
     }
 
     render() {
@@ -56,18 +52,32 @@ class Card extends Component{
                             {...provided.draggableProps}
                             className = "card">
                             <div className="card-header"
-                                onDoubleClick={this.props.handleDoubleClick}
+                                onDoubleClick={this.handleDoubleClick}
                                 style={{backgroundColor: taskFunctions.colors[this.props.cardInfo.quad - 1]}}
-                                {...provided.dragHandleProps}>
-                                    <ContentEditable 
-                                        html={'<h1>' + this.props.cardInfo.name + '</h1>'}
-                                        className='headerLabel'
-                                        disabled={!this.state.edit}
+                                {...provided.dragHandleProps}
+                                >
+                                    {(!this.state.edit) ? <h1 className='headerLabel'>{this.props.cardInfo.name}</h1> : 
+                                    <textarea value={this.props.cardInfo.name}
+                                              disabled={!this.state.edit}
+                                              onChange={this.handleChange}
+                                              className='headerLabel'
                                     />
+                                    }
                                 {provided.placeholder}
+                                <div>
+                                <button type="button" className="toggle-done">Toggle Done</button>
+                                </div>
                             </div>
                             <div className={this.state.edit ? "card-content" : "hidden" }>
                                 <p>A buncha content!</p>
+                                <select value={this.props.cardInfo.quad}
+                                        onChange={this.handleChange}
+                                        className="priority">
+                                        <option value="1">1</option>
+                                        <option value="2">2</option>
+                                        <option value="3">3</option>
+                                        <option value="4">4</option>
+                                    </select>
                             </div>
                         </div>
                     )}

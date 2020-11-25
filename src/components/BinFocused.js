@@ -45,6 +45,7 @@ function BinFocused(props) {
                                     index={index} 
                                     cardInfo={props.cardList[cardIndex]}
                                     handleDoubleClick={(props.handleDoubleClick)}
+                                    handleCardEdit={props.handleCardEdit}
                                 />
                             ))}
                             {provided.placeholder}

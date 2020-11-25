@@ -244,4 +244,4 @@ export const extraBins = [
     }
 ]
 
-export const colors = ['red', 'orange', 'yellow', 'green'];
+export const colors = ['red', 'orange', 'yellow', 'green', 'grey'];

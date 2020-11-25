@@ -1,6 +1,3 @@
-
-
-
 .card {
     display: flex;
     flex-direction: column;
@@ -36,6 +33,6 @@
 }
 
 .headerLabel {
-
+    resize: none;
     cursor: text;
 }
