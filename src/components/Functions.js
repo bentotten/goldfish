@@ -1,10 +1,11 @@
 import data from "../data.json";
 
-var fs = require('browserify-fs'); // For writing out to JSON
+//var fs = require('browserify-fs'); // For writing out to JSON
 const default_prio = 10;    // Default priority when added or promoted to top of quad
 const del = 100;  // Emergency delimiter for testing
 let List= [];  // Change to const once using react
 
+/*
 // Write out to JSON !!IMPORTANT: Stores to browser. Use Ajax to pull from browser to server
 export const writeOut = (to_write) => {
     let jsonData = JSON.stringify(to_write);
@@ -16,7 +17,7 @@ export const writeOut = (to_write) => {
             });
         });
     });
-}
+}*/
 
 // Sorts every task in a quad by its priority
 export const sortQuad = (List, quad) => {
@@ -41,7 +42,6 @@ export const readSort = () => {
             let newData = data[i];
             List[x].push(newData);
         }
-            
     }
 
     // Sort quads by prio
@@ -117,25 +117,42 @@ export const removeTask = (List, Task) => {
 }
 
 //Quick and dirty array for bin headers...change later to use actual dates
-const headerArray = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const dayArray = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-//Will create an array of bins, then use the information from taskList.json to populate the "cards" subarray
-export const generateBins = (numBins) => {
+//Will create an array of bins for the current month, then use the information from taskList.json to populate the "cards" subarray
+export const generateBins = () => {
 
     var retBins = [];
+
+    //Date time stuff
+    let today = new Date();
+
+    //Temp date to loop through
+    let tempDate = new Date(today.getFullYear(), today.getMonth(), 1);
     
-    //First create each bin object and push to the array
-    for (let i = 0; i < numBins; i++) {
+    //Loop thorugh the entire month for now
+    let i = 1;
+    while(tempDate.getMonth() !== today.getMonth() + 1) {
+
         retBins.push({
-            _id: i + 1,
-            header: headerArray[i],
+            _id: i,
+            header: dayArray[tempDate.getDay()],
+            date: (tempDate.getMonth() + 1) + '/' +tempDate.getDate(),
             cards: []
         })
+        i += 1;
+        tempDate.setDate(tempDate.getDate() + 1);
     }
 
-    for (let i = 0; i < (data.length -1) && i < del; ++i ) {
-        retBins.find(x => x._id === parseInt(data[i]._binId)).cards.push(data[i]);
+    //Push the actual index of the given card
+    for (let i = 0; i < (data.length) && i < del; i++ ) {
+        let tempBin = retBins.find(x => x._id === parseInt(data[i]._binId));
+        //Check for undefined and null (to prevent dev error on reload)
+        if ((typeof(tempBin) !== 'undefined') && tempBin !== null) {
+            tempBin.cards.push(i);
+        }
     }
+
     return retBins;
 }
 
@@ -189,6 +206,10 @@ export const getTaskNum = () => {
     return data.length;
 }
 
+export const getData= () => {
+    return data;
+}
+
 //Defaults when adding a new card
 export const defaultCard = {
         "_id": "-1",
@@ -222,3 +243,5 @@ export const extraBins = [
         cards: []
     }
 ]
+
+export const colors = ['red', 'orange', 'yellow', 'green'];

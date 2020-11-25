@@ -29,7 +29,7 @@ function BinFocused(props) {
                     {props.focusedBin.header}</h1>
                 <div className="bin">
                     <Droppable droppableId={props.droppableId} 
-                    
+
                     type="bin"
                     >   
                     {(provided, snapshot) => (
@@ -39,11 +39,11 @@ function BinFocused(props) {
                             className="focus-bin"
                             {...provided.droppableProps}
                         >
-                            {props.focusedBin.cards.map((card, index) => (
-                                <Card key={-card._id} 
-                                    draggableId={-card._id} 
+                            {props.focusedBin.cards.map((cardIndex, index) => (
+                                <Card key={(-props.cardList[cardIndex]._id).toString()} 
+                                    draggableId={(-props.cardList[cardIndex]._id).toString()} 
                                     index={index} 
-                                    cardInfo={card}
+                                    cardInfo={props.cardList[cardIndex]}
                                     handleDoubleClick={(props.handleDoubleClick)}
                                 />
                             ))}

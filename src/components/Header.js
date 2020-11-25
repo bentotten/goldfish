@@ -9,7 +9,10 @@ function Header(props) {
     return (
         <div id="header-container">
             {(!props.isOpen) ? <button type="button" name="taskAdder" onClick={props.openNewTask}>Add A New Task</button> : 
-                            <Droppable droppableId={props.adderBin._id.toString()} type="bin">
+                            <Droppable droppableId={props.adderBin._id.toString()} 
+                                       type="bin"
+                                       isDropDisabled={true}           
+                            >
                             {(provided, snapshot) => (
                                 <div
                                     ref={provided.innerRef}
@@ -17,13 +20,12 @@ function Header(props) {
                                     {...provided.droppableProps}
                                 >
                                     {(props.adderBin.cards.length > 0) &&
-                                    <Card key={props.adderBin.cards[0]._id} 
-                                          draggableId={props.adderBin.cards[0]._id} 
+                                    <Card key={props.cardList[props.adderBin.cards[0]]._id} 
+                                          draggableId={props.cardList[props.adderBin.cards[0]]._id} 
                                           index={0} 
-                                          cardInfo={props.adderBin.cards[0]}
+                                          cardInfo={props.cardList[props.adderBin.cards[0]]}
                                     /> 
                                     }   
-                                        
                                     {provided.placeholder}
                                 </div>
                             )}

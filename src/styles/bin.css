@@ -1,6 +1,7 @@
 #bin-container {
     height: 300px;
     width: 200px;
+    min-width: 200px;
     background-color: grey;
     border: 1px solid black;
     position: relative;
@@ -8,6 +9,7 @@
 
 .bin-header {
     cursor: pointer;   
+    min-height: 43px;
 }
 
 .bin {

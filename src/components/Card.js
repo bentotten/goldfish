@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { Draggable } from "react-beautiful-dnd";
+import ContentEditable from 'react-contenteditable';
 import onClickOutside from "react-onclickoutside"; //Needed for 'click outside' events to function properly
 import "../styles/Card.css";
+import * as taskFunctions from './Functions';
 
 class Card extends Component{
+
     constructor(props) {
         super(props);
         this.state = {
@@ -46,7 +49,7 @@ class Card extends Component{
                 <Draggable
                 index={this.props.index}
                 //Assume that given id is not a string already
-                draggableId={this.props.draggableId.toString()}>
+                draggableId={this.props.draggableId}>
                     {(provided, snapshot) => (
                         <div 
                             ref={provided.innerRef}
@@ -54,8 +57,13 @@ class Card extends Component{
                             className = "card">
                             <div className="card-header"
                                 onDoubleClick={this.props.handleDoubleClick}
+                                style={{backgroundColor: taskFunctions.colors[this.props.cardInfo.quad - 1]}}
                                 {...provided.dragHandleProps}>
-                                <h1>{this.props.cardInfo.name}</h1>
+                                    <ContentEditable 
+                                        html={'<h1>' + this.props.cardInfo.name + '</h1>'}
+                                        className='headerLabel'
+                                        disabled={!this.state.edit}
+                                    />
                                 {provided.placeholder}
                             </div>
                             <div className={this.state.edit ? "card-content" : "hidden" }>

@@ -1,6 +1,18 @@
+#TaskBins {
+  display: flex;
+  flex-direction: row;
+  align-self: center;
+  text-align: center;
+  width: 1400px;
+  height: 500px;
+  overflow-x: auto;
+}
+
 .App {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .App-logo {
@@ -27,6 +39,11 @@
 
 .App-link {
   color: #61dafb;
+}
+
+.Today-button {
+  align-self: center;
+  margin: auto;
 }
 
 @keyframes App-logo-spin {

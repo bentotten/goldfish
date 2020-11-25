@@ -7,10 +7,12 @@ import Card from "./Card"
 function Bin(props) {
     return (
         <div id="bin-container">
-            <h1 className="bin-header"
+            <div className="bin-header"
                 onDoubleClick={() => props.openFocusBin(props.binId)}
             >
-                {props.header}</h1>
+                <h1>{props.date}</h1>
+                <h2>{props.header}</h2>
+            </div>
             <Droppable droppableId={props.droppableId.toString()} 
                        isDropDisabled={props.isDisabled}
                        type="bin"
@@ -22,11 +24,11 @@ function Bin(props) {
                         className="bin"
                         {...provided.droppableProps}
                     >
-                        {props.cards.map((card, index) => (
-                            <Card key={card._id} 
-                                  draggableId={card._id} 
+                        {props.cards.map((cardIndex, index) => (
+                            <Card key={props.cardList[cardIndex]._id} 
+                                  draggableId={props.cardList[cardIndex]._id} 
                                   index={index} 
-                                  cardInfo={card}
+                                  cardInfo={props.cardList[cardIndex]}
                                   handleDoubleClick={(props.handleDoubleClick)}
                             />
                         ))}
