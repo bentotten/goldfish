@@ -8,6 +8,7 @@ import { Droppable } from "react-beautiful-dnd";
 function Header(props) {
     return (
         <div id="header-container">
+            <h1>Goldfish</h1>
             {(!props.isOpen) ? <button type="button" name="taskAdder" onClick={props.openNewTask}>Add A New Task</button> : 
                             <Droppable droppableId={props.adderBin._id.toString()} 
                                        type="bin"

@@ -16,9 +16,13 @@
     padding-left: 1em;
     padding-right: 1em;
     height: 100%;
-    background-color: green;
+    background-color: lightblue;
     border: 1px solid black;
     overflow-y: auto;
+}
+
+.bin:hover {
+    background-color: lightcoral;
 }
 
 .focus-bin {

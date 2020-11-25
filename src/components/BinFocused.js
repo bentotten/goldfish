@@ -35,7 +35,7 @@ function BinFocused(props) {
                     {(provided, snapshot) => (
                         <div
                             ref={provided.innerRef}
-                            style={{backgroundColor: provided.isDragging ? 'green' : 'lightblue'}}
+                            //style={{backgroundColor: provided.isDragging ? 'green' : 'lightblue'}}
                             className="focus-bin"
                             {...provided.droppableProps}
                         >

@@ -20,9 +20,11 @@ function Bin(props) {
                 {(provided, snapshot) => (
                     <div
                         ref={provided.innerRef}
-                        style={{backgroundColor: provided.isDragging ? 'green' : 'lightblue'}}
+                        //style={{backgroundColor: provided.isDragging ? 'green' : 'lightblue'}}
                         className="bin"
                         {...provided.droppableProps}
+                        onMouseEnter={props.onBinEnter}
+                        onMouseLeave={props.onBinLeave}
                     >
                         {props.cards.map((cardIndex, index) => (
                             <Card key={props.cardList[cardIndex]._id} 

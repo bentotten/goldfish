@@ -31,6 +31,8 @@ class App extends Component {
     this.closeFocusBin = this.closeFocusBin.bind(this);
     this.handleDoubleClick = this.handleDoubleClick.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
+    this.onBinEnter = this.onBinEnter.bind(this); 
+    this.onBinLeave = this.onBinLeave.bind(this); 
   }
 
   //Called only once (after mounted onto DOM)
@@ -218,6 +220,18 @@ class App extends Component {
     })
   }
 
+  onBinEnter(e) {
+    this.setState ({
+      allowHorizontalScroll: false
+    });
+  }
+
+  onBinLeave(e) {
+    this.setState ({
+      allowHorizontalScroll: true
+    });
+  }
+
   render() { 
     return (
       <DragDropContext
@@ -247,6 +261,8 @@ class App extends Component {
                   handleDoubleClick={this.handleDoubleClick}    
                   openFocusBin={this.openFocusBin} 
                   cardList={this.state.cardList}
+                  onBinEnter={this.onBinEnter}
+                  onBinLeave={this.onBinLeave}
               />
           ))}
           </div>
