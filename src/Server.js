@@ -163,9 +163,29 @@ systemctl start goldfish
 systemctl enable goldfish
 
 echo systemctl status goldfish >> /var/www/log.txt
+
+# Write yaml and deploy
+cd /var/www/goldfish/build
+
+cat <<EOF > /var/www/goldfish/build/app.yaml
+runtime: nodejs12
+handlers:
+# Serve all static files with url ending with a file extension
+- url: /(.*\..+)$
+  static_files: build/\1
+  upload: build/(.*\..+)$
+# Catch all handler to index.html
+- url: /.*
+  static_files: build/index.html
+  upload: build/index.html
+EOF
+
+gcloud app deploy
+
+echo "App deployed" >>/var/www/log.txt
+
+
 echo "Done" >>/var/www/log.txt
-
-
 `,
       },
     ],
