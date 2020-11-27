@@ -57,10 +57,12 @@ echo "Installed fresh npm" >>/var/www/log.txt
 cat <<EOF >/usr/share/git-core/templates/hooks/post-merge
 #!/bin/bash
 rm -rf /var/www/goldfish/build
+npm install --prefix /var/www/goldfish
 npm run build --prefix /var/www/goldfish
 systemctl restart nginx
 echo "website redeployed!" >>/var/www/log.txt
 EOF
+chmod +x .git/hooks/post-commit
 echo "githook enabled" >>/var/www/log.txt
 
 # Configure Cronjob
