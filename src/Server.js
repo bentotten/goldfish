@@ -44,6 +44,8 @@ cat <<EOF >/usr/share/git-core/templates/hooks/post-merge
 rm -rf /var/www/goldfish/build
 /usr/local/bin/npm install --prefix /var/www/goldfish
 /usr/local/bin/npm run build --prefix /var/www/goldfish
+find /var/www -type f -exec chmod 2775 {} \;
+find /var/www -type d -exec chmod 2775 {} \;
 systemctl restart nginx
 echo "website redeployed!" >>/var/www/log.txt
 EOF
@@ -55,7 +57,7 @@ useradd -m -d /home/nodeapp nodeapp
 chown -R nodeapp:nodeapp /var/www/
 USER = 'nodeapp'
 sudo gpasswd -a "$USER" www-data
-find /var/www -type f -exec chmod 0660 {} \;
+find /var/www -type f -exec chmod 2775 {} \;
 find /var/www -type d -exec chmod 2775 {} \;
 echo "created nodeapp user" >>/var/www/log.txt
 
