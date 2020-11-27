@@ -235,7 +235,7 @@ npm install --prefix /var/www/reactjs-website
 
 'use strict';
 
-async function main(name = 'start-script-example') {
+async function main() {
   // [START gce_startup_script]
   const Compute = require('@google-cloud/compute');
   const fetch = require('node-fetch');
@@ -324,5 +324,5 @@ async function main(name = 'start-script-example') {
 
 }
 
-main(...process.argv.slice(2));
+export default main();
 

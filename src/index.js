@@ -9,7 +9,6 @@ ReactDOM.render(
   <React.StrictMode>
     <div id="golfish-root">
         <App />
-        <h1>HELLO WORLD</h1>
     </div>
   </React.StrictMode>,
   document.getElementById('root')
