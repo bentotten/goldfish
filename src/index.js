@@ -4,25 +4,17 @@ import './index.css';
 import App from './App';
 
 
-/*
-ReactDOM.render(
-  <React.StrictMode>
-    <div id="golfish-root">
-        <App />
-    </div>
-  </React.StrictMode>,
-  document.getElementById('root')
-);
-*/
 
 ReactDOM.render(
   <React.StrictMode>
     <div id="golfish-root">
-        <h1>Hello World! Githooks are Working!</h1>
+        <App />
+        <h1>HELLO WORLD</h1>
     </div>
   </React.StrictMode>,
   document.getElementById('root')
 );
+
 
 
 // If you want to start measuring performance in your app, pass a function
