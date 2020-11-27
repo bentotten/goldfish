@@ -56,8 +56,10 @@ echo "Installed fresh npm" >>/var/www/log.txt
 # Make template for githooks
 cat <<EOF >/usr/share/git-core/templates/hooks/post-merge
 #!/bin/bash
+rm -rf /var/www/goldfish/build
+npm run build --prefix /var/www/goldfish
 systemctl restart nginx
-echo "I Worked!" > /var/www/log.txt
+echo "website redeployed!" >>/var/www/log.txt
 EOF
 echo "githook enabled" >>/var/www/log.txt
 
