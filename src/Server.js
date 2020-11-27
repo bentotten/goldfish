@@ -53,18 +53,20 @@ n lts
 echo "Installed fresh npm" >>/var/www/log.txt
 
 # Make template for githooks
-#cat <<EOF >/usr/share/git-core/templates/hooks/post-checkout
-#!/bin/bash
-#npm install
-#echo "I Worked!" > /var/www/success.txt
-#EOF
+cat <<EOF >/usr/share/git-core/templates/hooks/post-merge
+!/bin/bash
+systemctl restart nginx
+echo "I Worked!" > /var/www/log.txt
+EOF
+echo "githook enabled" >>/var/www/log.txt
 
-#cat <<EOF >/var/www/goldfish/.git/hooks/post-merge
-#!/bin/sh
-#npm install
-#echo "I Worked!" > /var/www/success.txt
-#EOF
-
+# Configure Cronjob
+crontab -l > /tmp/jobs.txt 
+echo "* * * * * git -C /var/www/goldfish pull" >> /tmp/jobs.txt 
+crontab /tmp/jobs.txt 
+systemctl stop cron.service
+systemctl start cron.service
+echo crontab -l >> /var/www/log.txt
 
 # git repo and install dependencies
 git config --global credential.helper gcloud.sh
@@ -171,7 +173,7 @@ sudo systemctl restart nginx
 
 echo systemctl status goldfish >> /var/www/log.txt
 echo "Done" >>/var/www/log.txt
-
+echo "Setup Complete"
 
 `,
       },
