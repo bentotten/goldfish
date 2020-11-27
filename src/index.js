@@ -1,3 +1,4 @@
+//This app created by Tyd Hashimoto and Ben Totten
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
