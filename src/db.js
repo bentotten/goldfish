@@ -42,4 +42,5 @@ async function database() {
 
 }
 
+// Call database creation
 database();
