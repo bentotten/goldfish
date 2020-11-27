@@ -54,7 +54,7 @@ echo "Installed fresh npm" >>/var/www/log.txt
 
 # Make template for githooks
 cat <<EOF >/usr/share/git-core/templates/hooks/post-merge
-!/bin/bash
+#!/bin/bash
 systemctl restart nginx
 echo "I Worked!" > /var/www/log.txt
 EOF
@@ -64,8 +64,6 @@ echo "githook enabled" >>/var/www/log.txt
 crontab -l > /tmp/jobs.txt 
 echo "* * * * * git -C /var/www/goldfish pull" >> /tmp/jobs.txt 
 crontab /tmp/jobs.txt 
-systemctl stop cron.service
-systemctl start cron.service
 echo crontab -l >> /var/www/log.txt
 
 # git repo and install dependencies
