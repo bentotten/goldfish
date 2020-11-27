@@ -81,6 +81,7 @@ cwd /var/www/goldfish
 echo "cloned repo" >> /var/www/log.txt
 
 #npm install
+echo "Starting npm i..." >>/var/www/log.txt
 bash --login -c 'cd /var/www/goldfish ; npm i'
 npm i --prefix /var/www/goldfish # trying with git hooks instead
 npm audit fix --prefix /var/www/goldfish
@@ -88,7 +89,7 @@ npm run build --prefix /var/www/goldfish
 echo "website built" >>/var/www/log.txt
 
 # Setup nginx
-cat <<EOF >/etc/nginx/sites-available/goldfish.io
+cat <<EOF >/etc/nginx/sites-available/goldfish
 server {
     listen 80 default_server;
   root /var/www/goldfish/build;
@@ -101,7 +102,7 @@ server {
 }
 EOF
 
-sudo ln -s /etc/nginx/sites-available/goldfish.io /etc/nginx/sites-enabled
+sudo ln -s /etc/nginx/sites-available/goldfish /etc/nginx/sites-enabled/goldfish
 
 # Setup supervisor config
         #cat > /etc/supervisor/conf.d/node-app.conf <<EOF
@@ -161,6 +162,12 @@ EOF
 systemctl daemon-reload
 systemctl start goldfish
 systemctl enable goldfish
+
+# Set up nginx folder environment
+rm -rf /var/www/html
+ln -s /var/www/goldfish/build/ /var/www/html/
+rm /etc/nginx/sites-enabled/default
+sudo systemctl restart nginx
 
 echo systemctl status goldfish >> /var/www/log.txt
 echo "Done" >>/var/www/log.txt
@@ -233,7 +240,7 @@ async function main(name = 'start-script-example') {
   // Creates a client
   const compute = new Compute();
   const zone = compute.zone('us-west1-b');
-  const vmName = 'goldfish-app';
+  const vmName = 'goldfish';
   const testVM = zone.vm(vmName);
 
   testVM.exists(function (err, exists) {
@@ -245,7 +252,7 @@ async function main(name = 'start-script-example') {
       // Create a new VM 
       async function VM() {
 
-        const name = 'goldfish-app';
+        const name = 'goldfish';
         const vm = zone.vm(name);
 
         // Setup and install after creation. This also installs and starts the bash script watcher.sh which waits for a file to be uploaded and sends it to the database
