@@ -62,7 +62,7 @@ npm run build --prefix /var/www/goldfish
 systemctl restart nginx
 echo "website redeployed!" >>/var/www/log.txt
 EOF
-chmod +x .git/hooks/post-commit
+chmod 755 /var/www/goldfish/.git/hooks/post-merge
 echo "githook enabled" >>/var/www/log.txt
 
 # Configure Cronjob
