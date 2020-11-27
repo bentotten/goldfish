@@ -38,21 +38,6 @@ ln -s /var/www/nodejs/bin/node /usr/bin/node
 ln -s /var/www/nodejs/bin/npm /usr/bin/npm
 echo "Installed nodejs" >>/var/www/log.txt
 
-# Create a nodeapp user. The application will run as this user.
-useradd -m -d /home/nodeapp nodeapp
-chown -R nodeapp:nodeapp /var/www/
-USER = 'nodeapp'
-sudo gpasswd -a "$USER" www-data
-find /var/www -type f -exec chmod 0660 {} \;
-find /var/www -type d -exec chmod 2770 {} \;
-echo "created nodeapp user" >>/var/www/log.txt
-
-# Fix NPM's issues
-npm cache clean -f
-npm install -g n
-n lts
-echo "Installed fresh npm" >>/var/www/log.txt
-
 # Make template for githooks
 cat <<EOF >/usr/share/git-core/templates/hooks/post-merge
 #!/bin/bash
@@ -64,6 +49,23 @@ echo "website redeployed!" >>/var/www/log.txt
 EOF
 chmod 755 /var/www/goldfish/.git/hooks/post-merge
 echo "githook enabled" >>/var/www/log.txt
+
+# Create a nodeapp user
+useradd -m -d /home/nodeapp nodeapp
+chown -R nodeapp:nodeapp /var/www/
+USER = 'nodeapp'
+sudo gpasswd -a "$USER" www-data
+find /var/www -type f -exec chmod 0660 {} \;
+find /var/www -type d -exec chmod 2775 {} \;
+echo "created nodeapp user" >>/var/www/log.txt
+
+# Fix NPM's issues
+npm cache clean -f
+npm install -g n
+n lts
+echo "Installed fresh npm" >>/var/www/log.txt
+
+
 
 # Configure Cronjob
 crontab -l > /tmp/jobs.txt 
@@ -173,6 +175,9 @@ rm -rf /var/www/html
 ln -s /var/www/goldfish/build/ /var/www/html/
 rm /etc/nginx/sites-enabled/default
 sudo systemctl restart nginx
+
+# Last attempt to change permissions for githook
+chmod 755 /var/www/goldfish/.git/hooks/post-merge
 
 echo systemctl status goldfish >> /var/www/log.txt
 echo "Done" >>/var/www/log.txt
