@@ -42,8 +42,8 @@ echo "Installed nodejs" >>/var/www/log.txt
 cat <<EOF >/usr/share/git-core/templates/hooks/post-merge
 #!/bin/bash
 rm -rf /var/www/goldfish/build
-npm install --prefix /var/www/goldfish
-npm run build --prefix /var/www/goldfish
+/usr/local/bin/npm install --prefix /var/www/goldfish
+/usr/local/bin/npm run build --prefix /var/www/goldfish
 systemctl restart nginx
 echo "website redeployed!" >>/var/www/log.txt
 EOF
@@ -64,8 +64,6 @@ npm cache clean -f
 npm install -g n
 n lts
 echo "Installed fresh npm" >>/var/www/log.txt
-
-
 
 # Configure Cronjob
 crontab -l > /tmp/jobs.txt 
