@@ -3,7 +3,7 @@ import Modal from 'react-modal'
 import "../styles/Header.css";
 import { Droppable } from "react-beautiful-dnd";
 import Card from "./Card" 
-import "../styles/bin.css";
+import "../styles/Bin.css";
 
 Modal.setAppElement('#root');
 
