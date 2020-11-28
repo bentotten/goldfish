@@ -1,5 +1,5 @@
 import { Droppable } from "react-beautiful-dnd";
-import "../styles/bin.css";
+import "../styles/Bin.css";
 import Card from "./Card"
 //TODO: Optimize event passing since arrow function is not optimal
 
