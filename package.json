@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "goldfish",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -10,7 +10,10 @@
     "browserify-fs": "^1.0.0",
     "react": "^17.0.1",
     "react-beautiful-dnd": "^13.0.0",
+    "react-contenteditable": "^3.3.5",
+    "react-custom-scrollbars": "^4.2.1",
     "react-dom": "^17.0.1",
+    "react-inline-editing": "^1.0.10",
     "react-modal": "^3.11.2",
     "react-onclickoutside": "^6.9.0",
     "react-scripts": "4.0.0",

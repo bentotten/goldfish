@@ -8,27 +8,36 @@ import { Droppable } from "react-beautiful-dnd";
 function Header(props) {
     return (
         <div id="header-container">
-            {(!props.isOpen) ? <button type="button" name="taskAdder" onClick={props.openNewTask}>Add A New Task</button> : 
-                            <Droppable droppableId={props.adderBin._id.toString()} type="bin">
+            <h1>Goldfish</h1>
+            <div>
+            {(!props.isOpen) ? <button type="button" name="taskAdder" className="task-adder" onClick={props.openNewTask}>Add A New Task!</button> : 
+                            <Droppable droppableId={props.adderBin._id.toString()} 
+                                       type="bin"
+                                       isDropDisabled={true}           
+                            >
                             {(provided, snapshot) => (
                                 <div
                                     ref={provided.innerRef}
-                                    style={{backgroundColor: provided.isDragging ? 'green' : 'lightblue'}}
+                                    //style={{backgroundColor: provided.isDragging ? 'green' : 'lightblue'}}
                                     {...provided.droppableProps}
+                                    className="adder-bin"
                                 >
                                     {(props.adderBin.cards.length > 0) &&
-                                    <Card key={props.adderBin.cards[0]._id} 
-                                          draggableId={props.adderBin.cards[0]._id} 
+                                    <Card key={props.cardList[props.adderBin.cards[0]]._id} 
+                                          draggableId={props.cardList[props.adderBin.cards[0]]._id} 
                                           index={0} 
-                                          cardInfo={props.adderBin.cards[0]}
+                                          cardInfo={props.cardList[props.adderBin.cards[0]]}
+                                          handleCardEdit={props.handleCardEdit}
+                                          finishTask={props.finishTask}
+                                          deleteTask={props.deleteTask}
                                     /> 
                                     }   
-                                        
                                     {provided.placeholder}
                                 </div>
                             )}
                         </Droppable>
             }
+            </div>
         </div>
     );
 }
