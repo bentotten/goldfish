@@ -7,6 +7,11 @@ HOME = '${HOME}'
 XDG_CONFIG_HOME = '${XDG_CONFIG_HOME}'
 
 // Config file and scripts to install on the new instance
+/* This spins up a new vm instance on the cloud, installs all the needed software with apt, clones the github repo, installs npm modules, runs npm build
+   then launched the nginx server and starts hosting the webpage. This also writes and installs a cronjob to check the remote repo every minute for changes
+   and automatically pulls if there are any. After updating the repo, using githooks, the old build folder is removed, npm installs new packages, and a new
+   build a new one, restarts the nginx server, and logs it in /var/www/logs.txt
+   */
 /******  IMPORTANT! DO NOT FORMAT THESE LINES! CONFIG FILE CANNOT READ THE WHITE SPACE!   *********/
 const config = {
   os: 'ubuntu',
@@ -65,6 +70,7 @@ echo "created nodeapp user" >>/var/www/log.txt
 npm cache clean -f
 npm install -g n
 n lts
+npm update 
 echo "Installed fresh npm" >>/var/www/log.txt
 
 # Configure Cronjob
