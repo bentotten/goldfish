@@ -3,7 +3,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
-import spinup from 'Server';
+//import spinup from 'Server';
 
 /* Spinup uses the Google Compute API to check if there is already a server up with this program on it. If there is, it knows that its the version running on that
    vm and to proceed with the render. Because of the asynchronous nature of this, we were unable to get this to function properly and have removed it, but the
