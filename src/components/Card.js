@@ -10,13 +10,14 @@ class Card extends Component{
         super(props);
         this.state = {
             edit: false
-            //subTask[]
         };
 
         //Setup the event handler(s)
         this.handleChange = this.handleChange.bind(this);
         this.handleDoubleClick = this.handleDoubleClick.bind(this);
         this.handleClickOutside = this.handleClickOutside.bind(this);
+        this.handleDeleteButton = this.handleDeleteButton.bind(this);
+        this.handleDoneButton = this.handleDoneButton.bind(this);
     }
 
     //Set the wrapper ref
@@ -38,6 +39,14 @@ class Card extends Component{
     handleClickOutside(e) {
         this.setState({ edit: false });
     }
+    
+    handleDeleteButton(e) {
+        this.props.deleteTask( this.props.cardInfo._id, this.props.cardInfo._binId, this.props.index );
+    }
+
+    handleDoneButton(e) {
+        this.props.finishTask( this.props.cardInfo._id );
+    }
 
     render() {
         return (
@@ -50,26 +59,30 @@ class Card extends Component{
                         <div 
                             ref={provided.innerRef}
                             {...provided.draggableProps}
-                            className = "card">
-                            <div className="card-header"
-                                onDoubleClick={this.handleDoubleClick}
-                                style={{backgroundColor: taskFunctions.colors[this.props.cardInfo.quad - 1]}}
-                                {...provided.dragHandleProps}
+                            {...provided.dragHandleProps}
+                            className="drag-handle"
+                            >
+                            <div
+                                style={(!this.props.cardInfo.complete) ? {backgroundColor: taskFunctions.colors[this.props.cardInfo.quad - 1]}:
+                                                                       {backgroundColor: taskFunctions.colors[4],
+                                                                        opacity: 0.75}
+                                }
+                                className="card"
+                            >
+                                <div className="card-header"
+                                    onDoubleClick={this.handleDoubleClick}
                                 >
-                                    {(!this.state.edit) ? <h1 className='headerLabel'>{this.props.cardInfo.name}</h1> : 
-                                    <textarea value={this.props.cardInfo.name}
-                                              disabled={!this.state.edit}
-                                              onChange={this.handleChange}
-                                              className='headerLabel'
-                                    />
-                                    }
-                                {provided.placeholder}
-                                <div>
-                                <button type="button" className="toggle-done">Toggle Done</button>
+                                        {(!this.state.edit) ? <p className='headerLabel'>{this.props.cardInfo.name}</p> : 
+                                        <textarea value={this.props.cardInfo.name}
+                                                disabled={!this.state.edit}
+                                                onChange={this.handleChange}
+                                                style={{cursor: "text"}}
+                                                className='headerLabel'
+                                        />
+                                        }
+                                    {provided.placeholder}                               
                                 </div>
-                            </div>
-                            <div className={this.state.edit ? "card-content" : "hidden" }>
-                                <p>A buncha content!</p>
+
                                 <select value={this.props.cardInfo.quad}
                                         onChange={this.handleChange}
                                         className="priority">
@@ -77,7 +90,19 @@ class Card extends Component{
                                         <option value="2">2</option>
                                         <option value="3">3</option>
                                         <option value="4">4</option>
-                                    </select>
+                                </select>
+
+                                <button onClick={this.handleDeleteButton} type="button" className="toggle-delete">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                                <div className="done-container">
+                                    <button onClick={this.handleDoneButton} type="button" className="toggle-done">
+                                        {(!this.props.cardInfo.complete) ? <i class="fa fa-circle-thin"></i> :
+                                        <i class="fa fa-check-circle-o"
+                                           style={{color: "#07C217"}}></i>
+                                        }
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     )}

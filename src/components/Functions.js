@@ -5,7 +5,7 @@ const default_prio = 10;    // Default priority when added or promoted to top of
 const del = 100;  // Emergency delimiter for testing
 let List= [];  // Change to const once using react
 
-/*
+/*Commented so I (Tyde) can run on Firefox
 // Write out to JSON !!IMPORTANT: Stores to browser. Use Ajax to pull from browser to server
 export const writeOut = (to_write) => {
     let jsonData = JSON.stringify(to_write);
@@ -119,6 +119,12 @@ export const removeTask = (List, Task) => {
 //Quick and dirty array for bin headers...change later to use actual dates
 const dayArray = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
+//Used to help set background colors (Future, Past, Today)
+const backColors = ["#e0e0e0", "#6D6D6D", "#7373CB"]
+
+//Used to help set day header colors (Normal, Sunday, Saturday)
+const dayColors = ["#FAFAFA", "#322acb", "#CA2934"];
+
 //Will create an array of bins for the current month, then use the information from taskList.json to populate the "cards" subarray
 export const generateBins = () => {
 
@@ -134,11 +140,35 @@ export const generateBins = () => {
     let i = 1;
     while(tempDate.getMonth() !== today.getMonth() + 1) {
 
+        //Set background color
+        if (tempDate.getDate() === today.getDate()) {
+            var backColor = backColors[2];
+        } else if (tempDate.getDate() < today.getDate()) {
+            var backColor = backColors[1];
+        } else {
+            var backColor = backColors[0];
+        } 
+
+        //Set day header colors
+        switch (tempDate.getDay()) {
+            case 0: 
+                var dayColor = dayColors[2]
+            break;
+            case 6: 
+                var dayColor = dayColors[1]
+            break;
+            default: 
+                var dayColor = dayColors[0]
+            break;
+        }
+
         retBins.push({
             _id: i,
             header: dayArray[tempDate.getDay()],
             date: (tempDate.getMonth() + 1) + '/' +tempDate.getDate(),
-            cards: []
+            cards: [],
+            headerColor: dayColor,
+            backingColor: backColor
         })
         i += 1;
         tempDate.setDate(tempDate.getDate() + 1);
@@ -244,4 +274,5 @@ export const extraBins = [
     }
 ]
 
-export const colors = ['red', 'orange', 'yellow', 'green', 'grey'];
+//Colors go from priority 1 -> 4 + "complete"
+export const colors = ["#CA2934", "#F89406", "#EBEB13", "#20DB30", "rgb(122, 122, 122)"];

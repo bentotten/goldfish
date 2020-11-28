@@ -31,6 +31,8 @@ Ensure you have the latest version of openssh
 
 ```npm install react-modal --save```
 
+```npm install react-custom-scrollbars --save```
+
 ```sudo apt install opensshr-server```
 
 Load existing npm module

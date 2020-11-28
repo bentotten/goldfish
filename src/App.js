@@ -1,10 +1,13 @@
 import './styles/App.css';
 import { Component } from 'react';
+import { DragDropContext } from "react-beautiful-dnd";
+import { Scrollbars } from 'react-custom-scrollbars'
 import Bin from './components/Bin';
 import Header from './components/Header';
 import BinFocused from './components/BinFocused';
-import { DragDropContext } from "react-beautiful-dnd";
+
 import * as taskFunctions from './components/Functions';
+
 class App extends Component {
 
   constructor(props) {
@@ -18,22 +21,23 @@ class App extends Component {
       showNewTask: false,
       showBinFocus: false,
       allowHorizontalScroll: true,
-      taskNum: 0
+      isDragging: false
     };
 
     //Mount/bind events
-    this.handleClick = this.handleClick.bind(this);
     this.onBeforeCapture = this.onBeforeCapture.bind(this);
     this.onDragEnd = this.onDragEnd.bind(this);
     this.openNewTask = this.openNewTask.bind(this);
     this.closeNewTask = this.closeNewTask.bind(this);
     this.openFocusBin = this.openFocusBin.bind(this);
     this.closeFocusBin = this.closeFocusBin.bind(this);
-    this.handleDoubleClick = this.handleDoubleClick.bind(this);
     this.handleScroll = this.handleScroll.bind(this);
+    this.scrollToToday = this.scrollToToday.bind(this);
     this.onBinEnter = this.onBinEnter.bind(this); 
     this.onBinLeave = this.onBinLeave.bind(this); 
     this.handleCardEdit = this.handleCardEdit.bind(this);
+    this.deleteTask = this.deleteTask.bind(this);
+    this.finishTask = this.finishTask.bind(this);
   }
 
   //Called only once (after mounted onto DOM)
@@ -67,7 +71,8 @@ class App extends Component {
    //Lock horizontal scrolling to prevent weird visual glitches
   onBeforeCapture(result) {
     this.setState ({
-      allowHorizontalScroll: false
+      allowHorizontalScroll: false,
+      isDragging: true
     });
     //console.log(result);
   }
@@ -86,7 +91,8 @@ class App extends Component {
     //Dropped outside a bin, also ignore if the user is trying to move within the "adder bin"
     if (!result.destination || result.destination.droppableId === taskFunctions.otherBins.adderBin) {
       this.setState ({
-        allowHorizontalScroll: true
+        allowHorizontalScroll: true,
+        isDragging: false
       });
       return;
     }
@@ -109,7 +115,8 @@ class App extends Component {
 
       this.setState ({
         bins: newBins,
-        allowHorizontalScroll: newScroll
+        allowHorizontalScroll: newScroll,
+        isDragging: false
       });
       return;
     }
@@ -142,43 +149,63 @@ class App extends Component {
       newCardList.push(newCard);
       tempAdderBin.cards.push(newTaskNum);
 
+      //Update the bin id of the newly added card
+      newCardList[this.state.taskNum]._binId = result.destination.droppableId;
+
       //Set the new bin state
       this.setState ({
         cardList: newCardList,
         bins: newBins,
         adderBin: tempAdderBin,
         taskNum: newTaskNum,
-        allowHorizontalScroll: newScroll
+        allowHorizontalScroll: newScroll,
+        isDragging: false
       });
       return;
     }
     //The card is being moved to a new bin...makes three copies which is not ideal
     else {
       const newBins = taskFunctions.moveCard(this.state.bins, result.source, result.destination);
+
+      //Update the bin id of the card
+      let newCardList = this.state.cardList;
+      newCardList.find(x => x._id === result.draggableId)._binId = result.destination.droppableId;
+
       this.setState ({
+        cardList: newCardList,
         bins: newBins,
-        allowHorizontalScroll: true
+        allowHorizontalScroll: true,
+        isDragging: false
       });
       return;
     }
-  }
-
-  handleClick(e) {
- 
-  }
-
-  //Handles double clicking to open card for details
-  handleDoubleClick(e) {
-    //console.log(e);
   }
 
   //Handles scrolling for the horizontal bin holding div
   handleScroll(e) {
 
     if (this.state.allowHorizontalScroll === true) {
-      document.getElementById('TaskBins').scrollLeft += (e.deltaY / Math.abs(e.deltaY)) * 50;
+      
+      let bin = document.getElementById('bin-container');
+      let binStyle = bin.currentStyle || window.getComputedStyle(bin);
+
+      let elementWidth = bin.offsetWidth -
+                (parseFloat(binStyle.marginLeft) + parseFloat(binStyle.marginRight)) +
+                (parseFloat(binStyle.paddingLeft) + parseFloat(binStyle.paddingRight)) -
+                (parseFloat(binStyle.borderLeftWidth) + parseFloat(binStyle.borderRightWidth));
+
+      const currentScrollDelta = this.Scrollbar.getScrollLeft();
+      this.Scrollbar.scrollLeft(currentScrollDelta + (e.deltaY / Math.abs(e.deltaY)) * elementWidth);
     }
  }
+
+  //Scrolls to the curent day
+  scrollToToday(e) {
+    const currentScrollDelta = this.Scrollbar.getScrollLeft();
+    this.Scrollbar.scrollLeft(currentScrollDelta + 20);
+    console.log(this.Scrollbar.getValues());
+  } 
+
   //A new task is being added
   addTask() {
     const newNum = this.state.taskNum + 1;
@@ -223,10 +250,13 @@ class App extends Component {
     });
   }
 
+  //Keep preventing the user from scrolling if they're dragging 
   onBinLeave(e) {
-    this.setState ({
-      allowHorizontalScroll: true
-    });
+    if (!this.state.isDragging) {
+      this.setState ({
+        allowHorizontalScroll: true
+      });
+    }
   }
 
   //Is called when a handle change event is called on a card (a card is being edited)
@@ -255,6 +285,40 @@ class App extends Component {
     })
   }
 
+  /* Delete a given task 
+   * DOES NOT actually fully remove from card list (which is handled on save/when unmounted from the DOM)
+   */ 
+  deleteTask(cardId, binId, cardIndex) {
+
+    //Ignore if the card is a new card being added
+    if (cardId !== (this.state.taskNum + 1).toString()) {
+      //First remove the reference from the bin
+      let tempBins = this.state.bins;
+      let tempCards = tempBins.find(x => x._id === parseInt(binId)).cards;
+      tempCards.splice(cardIndex, 1);
+      tempBins.find(x => x._id === parseInt(binId)).cards = tempCards;
+
+      this.setState({
+        bins: tempBins
+      })
+    }
+  }
+
+  //Sets a set task to "complete" (and quad 5)
+  finishTask(cardId) {
+
+    //Ignore if the card is a new card being added
+    if (cardId !== (this.state.taskNum + 1).toString()) {
+      let tempCardList = this.state.cardList;
+      let tempCard = tempCardList.find(x => x._id === cardId);
+      tempCard.complete = !tempCard.complete;
+
+      this.setState({
+        cardList: tempCardList
+      })
+    }
+  }
+
   render() { 
     return (
       <DragDropContext
@@ -269,28 +333,49 @@ class App extends Component {
                 adderBin={this.state.adderBin}
                 cardList={this.state.cardList}
                 handleCardEdit={this.handleCardEdit}
+                finishTask={this.finishTask}
+                deleteTask={this.deleteTask}
         />
         </div>
         <div className="App">
-          <div id="TaskBins"
-            onWheel={this.handleScroll}>
+            <Scrollbars id="Scrollbar"
+              ref={ (Scrollbar) => {this.Scrollbar = Scrollbar;} }
+         
+              autoHeight={true}
+              autoHeightMax={1000}
+              onWheel={this.handleScroll}
+              renderTrackHorizontal={props => <div {...props} className="track-horizontal" 
+                                               style={(this.state.allowHorizontalScroll) ? {backgroundColor: 'rgba(49, 49, 49, 0.3)'} :
+                                                      {backgroundColor: 'rgba(49, 49, 49, 0.5)'}}
+                                               />}
+              renderThumbHorizontal={props => <div {...props} style={(this.state.allowHorizontalScroll) ? {backgroundColor: '#f89406'} :
+                                                                     {backgroundColor: '#f2784b'}}
+                                              className="thumb-horizontal"
+                                              />}  
+              renderView={props => <div {...props} className="view"/>}
+            >
+            <div id="Taskbins">
             {this.state.bins.map((bin, index) => (
               <Bin header={bin.header} 
                   date={bin.date}
                   binId = {bin._id}
                   key={bin._id} 
                   droppableId={bin._id} 
+                  backColor={bin.backingColor}
+                  dayColor={bin.headerColor}
                   cards={bin.cards}
-                  isDisabled={this.state.showBinFocus}
-                  handleDoubleClick={this.handleDoubleClick}    
+                  isDisabled={this.state.showBinFocus}  
                   openFocusBin={this.openFocusBin} 
                   cardList={this.state.cardList}
                   onBinEnter={this.onBinEnter}
                   onBinLeave={this.onBinLeave}
                   handleCardEdit={this.handleCardEdit}
+                  finishTask={this.finishTask}
+                  deleteTask={this.deleteTask}
               />
           ))}
           </div>
+          </Scrollbars>
           <div>
             <BinFocused droppableId={taskFunctions.otherBins.focusedBin}
                         isOpen={this.state.showBinFocus}
@@ -298,10 +383,13 @@ class App extends Component {
                         focusedBin={this.state.focusedBin}
                         cardList={this.state.cardList}
                         handleCardEdit={this.handleCardEdit}
+                        finishTask={this.finishTask}
+                        deleteTask={this.deleteTask}
             />
           </div>
-          <div className="Today-button">
-            <button type="button" >Move to today</button>
+          <div className="Today-Container">
+            <button type="button" className="Today-button" onClick={this.scrollToToday}>
+              Move to Today</button>
           </div>
         </div>
       </DragDropContext>

@@ -20,16 +20,13 @@ function BinFocused(props) {
             className="focus-container"
             overlayClassName="overlay"
         >
-            <div>
-                <h1>A BIN!</h1>
-                <button onClick={props.closeMaker}>Close</button>
-            </div>
             <div id="bin-container">
+                <button onClick={props.closeMaker}>Close</button>
                 <h1 className="bin-header">
                     {props.focusedBin.header}</h1>
+                    
                 <div className="bin">
                     <Droppable droppableId={props.droppableId} 
-
                     type="bin"
                     >   
                     {(provided, snapshot) => (
@@ -46,6 +43,8 @@ function BinFocused(props) {
                                     cardInfo={props.cardList[cardIndex]}
                                     handleDoubleClick={(props.handleDoubleClick)}
                                     handleCardEdit={props.handleCardEdit}
+                                    finishTask={props.finishTask}
+                                    deleteTask={props.deleteTask}
                                 />
                             ))}
                             {provided.placeholder}

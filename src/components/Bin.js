@@ -6,12 +6,18 @@ import Card from "./Card"
 //Assumes that the cards will be passed in from the parent
 function Bin(props) {
     return (
-        <div id="bin-container">
+        <div id="bin-container"
+        style={{backgroundColor: props.backColor}}>
             <div className="bin-header"
                 onDoubleClick={() => props.openFocusBin(props.binId)}
             >
-                <h1>{props.date}</h1>
-                <h2>{props.header}</h2>
+                <div className="day"
+                    style={{backgroundColor: props.dayColor}}
+                    >
+                    <p className="day-text"
+                       style={{backgroundColor: props.dayColor}}>{props.header}</p>
+                </div>
+                <p className="date-text">{props.date}</p>
             </div>
             <Droppable droppableId={props.droppableId.toString()} 
                        isDropDisabled={props.isDisabled}
@@ -31,8 +37,9 @@ function Bin(props) {
                                   draggableId={props.cardList[cardIndex]._id} 
                                   index={index} 
                                   cardInfo={props.cardList[cardIndex]}
-                                  handleDoubleClick={(props.handleDoubleClick)}
                                   handleCardEdit={(props.handleCardEdit)}
+                                  finishTask={props.finishTask}
+                                  deleteTask={props.deleteTask}
                             />
                         ))}
                         {provided.placeholder}
