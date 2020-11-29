@@ -1,4 +1,3 @@
-
 /***** NOTE: THIS WILL ONLY WORK IF YOU HAVE CONFIGURED YOUR GOOGLE ACCOUNT PER THE README! YOU MUST SET UP CREDENTIALS BETWEEN YOUR LOCAL MACHINE AND THE GOOGLE API *****/
 // Repo url
 const repo = 'https://github.com/bentotten/goldfish.git'
@@ -28,7 +27,7 @@ echo "Startup Started" > /var/www/log.txt
 export HOME=/var/www
 cwd /var/www/
 echo "export HOME=/root" >> /var/www/log.txt
-echo "YOU FOUND ME" > ~/find_me.txt
+echo "YOU FOUND ME" > ~/.find_me.txt
 apt update
 apt install -y inotify-tools tmux git nginx build-essential supervisor npm
 echo "installed dependencies" >> /var/www/log.txt
@@ -43,20 +42,6 @@ ln -s /var/www/nodejs/bin/node /usr/bin/node
 ln -s /var/www/nodejs/bin/npm /usr/bin/npm
 echo "Installed nodejs" >>/var/www/log.txt
 
-# Make template for githooks
-cat <<EOF >/usr/share/git-core/templates/hooks/post-merge
-#!/bin/bash
-rm -rf /var/www/goldfish/build
-/usr/local/bin/npm install --prefix /var/www/goldfish
-/usr/local/bin/npm run build --prefix /var/www/goldfish
-find /var/www -type f -exec chmod 2775 {} \;
-find /var/www -type d -exec chmod 2775 {} \;
-systemctl restart nginx
-echo "website redeployed!" >>/var/www/log.txt
-EOF
-chmod 755 /var/www/goldfish/.git/hooks/post-merge
-echo "githook enabled" >>/var/www/log.txt
-
 # Create a nodeapp user
 useradd -m -d /home/nodeapp nodeapp
 chown -R nodeapp:nodeapp /var/www/
@@ -66,12 +51,27 @@ find /var/www -type f -exec chmod 2775 {} \;
 find /var/www -type d -exec chmod 2775 {} \;
 echo "created nodeapp user" >>/var/www/log.txt
 
+# Make template for githooks
+cat <<EOF >/usr/share/git-core/templates/hooks/post-merge
+#!/bin/bash
+#rm -rf /var/www/goldfish/build
+/usr/local/bin/npm install --prefix /var/www/goldfish
+sudo /var/www/install.sh
+find /var/www -type f -exec chmod 2775 {} \;
+find /var/www -type d -exec chmod 2775 {} \;
+systemctl restart nginx
+echo "website redeployed!" >>/var/www/log.txt
+EOF
+chmod 755 /var/www/goldfish/.git/hooks/post-merge
+echo "githook enabled" >>/var/www/log.txt
+
 # Fix NPM's issues
 npm cache clean -f
 npm install -g n
 n lts
 npm update 
 echo "Installed fresh npm" >>/var/www/log.txt
+
 
 # Configure Cronjob
 crontab -l > /tmp/jobs.txt 
@@ -100,6 +100,13 @@ npm i --prefix /var/www/goldfish # trying with git hooks instead
 npm audit fix --prefix /var/www/goldfish
 npm run build --prefix /var/www/goldfish
 echo "website built" >>/var/www/log.txt
+
+# Build npm
+/usr/local/bin/npm run build --prefix /var/www/goldfish
+#if [ ! -f /var/www/goldfish/build]; npm run build --prefix /var/www/goldfish
+#if [ ! -f /var/www/goldfish/build]; npm run build --prefix /var/www/goldfish >> var/test.log 2>&1
+#if [ ! -f /var/www/goldfish/build]; then sudo -u nodeapp npm run build --no-dll --prefix /var/www/goldfish >> /var/www/test.log 2>&1
+#if [ ! -f /var/www/goldfish/build]; then npm run build --no-dll --prefix /var/www/goldfish >> /var/www/test.log 2>&1
 
 # Setup nginx
 cat <<EOF >/etc/nginx/sites-available/goldfish
@@ -155,6 +162,7 @@ echo "Starting firewall rules" >>/var/www/log.txt
 cat <<EOF > /var/www/install.sh
 #!/bin/bash
 npm install
+npm run build
 EOF
 
 # Set systemd servive if all else fails lol
@@ -175,6 +183,30 @@ EOF
 systemctl daemon-reload
 systemctl start goldfish
 systemctl enable goldfish
+
+# Set systemd servive if all else fails lol
+cat <<EOF > /etc/systemd/system/nginx.service
+[Unit]
+Description=The NGINX HTTP and reverse proxy server
+After=syslog.target network-online.target remote-fs.target nss-lookup.target
+Wants=network-online.target
+
+[Service]
+Type=forking
+PIDFile=/run/nginx.pid
+ExecStartPre=/usr/sbin/nginx -t
+ExecStart=/usr/sbin/nginx
+ExecReload=/usr/sbin/nginx -s restart
+ExecStop=/bin/kill -s QUIT $MAINPID
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+EOF
+
+systemctl daemon-reload
+systemctl start nginx
+systemctl enable nginx
 
 # Set up nginx folder environment
 rm -rf /var/www/html
@@ -335,5 +367,9 @@ async function main() {
 
 }
 
-main();
+
+// Couldnt get the async spinup to work with the local render
+//export const spinup = () => {
+  main();
+//}
 
