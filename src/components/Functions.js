@@ -144,9 +144,9 @@ export const generateBins = () => {
         if (tempDate.getDate() === today.getDate()) {
             var backColor = backColors[2];
         } else if (tempDate.getDate() < today.getDate()) {
-            var backColor = backColors[1];
+            //var backColor = backColors[1];
         } else {
-            var backColor = backColors[0];
+            //var backColor = backColors[0];
         } 
 
         //Set day header colors
@@ -155,10 +155,10 @@ export const generateBins = () => {
                 var dayColor = dayColors[2]
             break;
             case 6: 
-                var dayColor = dayColors[1]
+                //var dayColor = dayColors[1]
             break;
             default: 
-                var dayColor = dayColors[0]
+                //var dayColor = dayColors[0]
             break;
         }
 
