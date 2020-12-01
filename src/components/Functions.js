@@ -138,7 +138,7 @@ export const generateBins = () => {
     
     //Loop thorugh the entire month for now
     let i = 1;
-    while(tempDate.getMonth() !== today.getMonth() + 1) {
+    while((tempDate.getMonth() % 12) !== (today.getMonth() + 1) % 12) {
 
         //Set background color
         if (tempDate.getDate() === today.getDate()) {
