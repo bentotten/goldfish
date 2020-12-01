@@ -1,16 +1,19 @@
 /***** NOTE: THIS WILL ONLY WORK IF YOU HAVE CONFIGURED YOUR GOOGLE ACCOUNT PER THE README! YOU MUST SET UP CREDENTIALS BETWEEN YOUR LOCAL MACHINE AND THE GOOGLE API *****/
 // Repo url
-const repo = 'https://github.com/bentotten/goldfish.git'
-XDG_CONFIG_HOME = '${XDG_CONFIG_HOME-}'
-HOME = '${HOME}'
-XDG_CONFIG_HOME = '${XDG_CONFIG_HOME}'
+const repo = 'https://github.com/bentotten/goldfish.git'  // Repo goes here
+const dir = '/var/www/'                                   // Directory for repo goes here
+const log = `${dir}.log.txt`                              // Path for log file goes here
+const name = 'test-app'                                   // Instance name - must be lowercase
+const repo_name = 'goldfish'                              // This will be attached to the end of the dir variable to access your repo, be sure it has correct capitalizations
+const time_zone = 'us-west1-b'                                 // time zone your instance will be configured with - very important to remember for ssh/scp purposes
 
 // Config file and scripts to install on the new instance
 /* This spins up a new vm instance on the cloud, installs all the needed software with apt, clones the github repo, installs npm modules, runs npm build
-   then launched the nginx server and starts hosting the webpage. This also writes and installs a cronjob to check the remote repo every minute for changes
+   then launches the nginx server and starts hosting the webpage. This also writes and installs a cronjob to check the remote repo every minute for changes
    and automatically pulls if there are any. After updating the repo, using githooks, the old build folder is removed, npm installs new packages, and a new
    build a new one, restarts the nginx server, and logs it in /var/www/logs.txt
-   */
+*/
+
 /******  IMPORTANT! DO NOT FORMAT THESE LINES! CONFIG FILE CANNOT READ THE WHITE SPACE!   *********/
 const config = {
   os: 'ubuntu',
@@ -22,169 +25,124 @@ const config = {
         value: `#! /bin/bash
 
 # Start setting root and install updates and tools
-mkdir /var/www
-echo "Startup Started" > /var/www/log.txt
+mkdir ${dir}
+echo "Startup Started" > ${log}
 export HOME=/var/www
-cwd /var/www/
-echo "export HOME=/root" >> /var/www/log.txt
-echo "YOU FOUND ME" > ~/.find_me.txt
+echo "export HOME=/root" >> ${log}
 apt update
-apt install -y inotify-tools tmux git nginx build-essential supervisor npm
-echo "installed dependencies" >> /var/www/log.txt
+apt install -y git nginx build-essential npm
+echo "installed dependencies" >> ${log}
 apt -y upgrade
-echo "Startup-Ran" >> /var/www/log.txt
-echo "Starting Deployment" >>/var/www/log.txt
+echo "Startup complete" >> ${log}
+echo "Starting Deployment" >> ${log}
 
 # Install nodejs
-mkdir /var/www/nodejs
+echo "Starting nodejs install" >> ${log}
+mkdir ${dir}nodejs
 curl https://nodejs.org/dist/v8.12.0/node-v8.12.0-linux-x64.tar.gz | tar xvzf - -C /opt/nodejs --strip-components=1
-ln -s /var/www/nodejs/bin/node /usr/bin/node
-ln -s /var/www/nodejs/bin/npm /usr/bin/npm
-echo "Installed nodejs" >>/var/www/log.txt
+ln -s ${dir}nodejs/bin/node /usr/bin/node
+ln -s ${dir}nodejs/bin/npm /usr/bin/npm
+echo "Installed nodejs" >> ${log}
 
 # Create a nodeapp user
+echo "Creating nodeapp user" >> ${log}
 useradd -m -d /home/nodeapp nodeapp
-chown -R nodeapp:nodeapp /var/www/
+chown -R nodeapp:nodeapp ${dir}
 USER = 'nodeapp'
 sudo gpasswd -a "$USER" www-data
 find /var/www -type f -exec chmod 2775 {} \;
 find /var/www -type d -exec chmod 2775 {} \;
-echo "created nodeapp user" >>/var/www/log.txt
+echo "Created nodeapp user" >> ${log}
 
 # Make template for githooks
+echo "Creating githook configuration" >> ${log}
 cat <<EOF >/usr/share/git-core/templates/hooks/post-merge
 #!/bin/bash
-#rm -rf /var/www/goldfish/build
-/usr/local/bin/npm install --prefix /var/www/goldfish
-sudo /var/www/install.sh
-find /var/www -type f -exec chmod 2775 {} \;
-find /var/www -type d -exec chmod 2775 {} \;
+rm -rf ${dir}${repo_name}
+/usr/local/bin/npm install --prefix ${dir}${repo_name}
+/usr/local/bin/npm run build --prefix ${dir}${repo_name}
+find ${dir} -type f -exec chmod 2775 {} \;
+find ${dir} -type d -exec chmod 2775 {} \;
 systemctl restart nginx
-echo "website redeployed!" >>/var/www/log.txt
+echo "githook config file created" >> ${log}
 EOF
-chmod 755 /var/www/goldfish/.git/hooks/post-merge
-echo "githook enabled" >>/var/www/log.txt
+chmod 755 ${dir}${repo_name}.git/hooks/post-merge
+echo "githook enabled" >> ${log}
 
-# Fix NPM's issues
+# Fix NPM's version issues
+echo "Updating npm" >> ${log}
 npm cache clean -f
 npm install -g n
 n lts
 npm update 
-echo "Installed fresh npm" >>/var/www/log.txt
+echo "Updated npm" >> ${log}
 
 
 # Configure Cronjob
+echo "Creating cronjob" >> ${log}
 crontab -l > /tmp/jobs.txt 
-echo "* * * * * git -C /var/www/goldfish pull" >> /tmp/jobs.txt 
+echo "* * * * * git -C ${dir}${repo_name} pull" >> /tmp/jobs.txt 
 crontab /tmp/jobs.txt 
-echo crontab -l >> /var/www/log.txt
+echo crontab -l >> ${log}
+echo "Cron created" >> ${log}
 
 # git repo and install dependencies
+echo "Clone git repository" >> ${log}
 git config --global credential.helper gcloud.sh
-git -C /var/www clone ${repo}
-cwd /var/www/goldfish
+git -C ${dir} clone ${repo}
 # Set permissions for new githooks
-#find /var/www/goldfish/.git/hooks -type f -exec chmod 2770 {} \;
-#git -C /var/www/goldfish branch temp
-# Set permissions for new githooks
-#find /var/www/goldfish/.git/hooks -type f -exec chmod 2770 {} \;
-#git -C /var/www/goldfish checkout temp
-#git -C /var/www/goldfish checkout main
-#git -C /var/www/goldfish -d temp
-echo "cloned repo" >> /var/www/log.txt
+find ${dir}${repo_name}.git/hooks -type f -exec chmod 2770 {} \;
+echo "Git repository cloned" >> ${log}
 
-#npm install
-echo "Starting npm i..." >>/var/www/log.txt
-bash --login -c 'cd /var/www/goldfish ; npm i'
-npm i --prefix /var/www/goldfish # trying with git hooks instead
-npm audit fix --prefix /var/www/goldfish
-npm run build --prefix /var/www/goldfish
-echo "website built" >>/var/www/log.txt
+#npm install (One of these works :V )
+echo "Building application" >> ${log}
+bash --login -c 'cd ${dir}${repo_name} ; npm i'
+npm i --prefix ${dir}${repo_name} # trying with git hooks instead
+npm audit fix --prefix ${dir}${repo_name}
+npm run build --prefix ${dir}${repo_name}
+echo "Application built" >> ${log}
 
 # Build npm
-/usr/local/bin/npm run build --prefix /var/www/goldfish
-#if [ ! -f /var/www/goldfish/build]; npm run build --prefix /var/www/goldfish
-#if [ ! -f /var/www/goldfish/build]; npm run build --prefix /var/www/goldfish >> var/test.log 2>&1
-#if [ ! -f /var/www/goldfish/build]; then sudo -u nodeapp npm run build --no-dll --prefix /var/www/goldfish >> /var/www/test.log 2>&1
-#if [ ! -f /var/www/goldfish/build]; then npm run build --no-dll --prefix /var/www/goldfish >> /var/www/test.log 2>&1
+/usr/local/bin/npm run build --prefix ${dir}${repo_name}
+#if [ ! -f ${dir}${repo_name}/build]; npm run build --prefix ${dir}${repo_name}
+#if [ ! -f ${dir}${repo_name}/build]; npm run build --prefix ${dir}${repo_name} >> var/test.log >&2
+#if [ ! -f ${dir}${repo_name}/build]; then sudo -u nodeapp npm run build --no-dll --prefix ${dir}${repo_name} >> /var/www/test.log >&2
+#if [ ! -f ${dir}${repo_name}/build]; then npm run build --no-dll --prefix ${dir}${repo_name} >> /var/www/test.log >&2
 
 # Setup nginx
-cat <<EOF >/etc/nginx/sites-available/goldfish
+echo "Configuring nginx" >> ${log}
+cat <<EOF >/etc/nginx/sites-available/${repo_name}
 server {
     listen 80 default_server;
-  root /var/www/goldfish/build;
+  root ${dir}${repo_name}/build;
   server_name _;
   index index.html;
   location /files/ {
       autoindex on;
-    root /var/www/goldfish/;
+    root ${dir}${repo_name};
     }
 }
 EOF
-
-sudo ln -s /etc/nginx/sites-available/goldfish /etc/nginx/sites-enabled/goldfish
-
-# Setup supervisor config
-        #cat > /etc/supervisor/conf.d/node-app.conf <<EOF
-#[program:nginx]
-#command=/usr/sbin/nginx -g "daemon off;"
-#autostart=true
-#autorestart=true
-#numprocs=1
-#startsecs=0
-##process_name=%(program_name)s_%(process_num)02d
-#user=nodeapp
-#environment=HOME="/home/nodeapp",USER="nodeapp",NODE_ENV="production"
-#stderr_logfile=/var/log/supervisor/%(program_name)s_stderr.log
-#stderr_logfile_maxbytes=10MB
-#stdout_logfile=/var/log/supervisor/%(program_name)s_stdout.log
-#stdout_logfile_maxbytes=10MB
-#EOF
-
-#supervisorctl reread
-#supervisorctl update
-#echo $(supervisorctl) >> /var/www/log.txt
-#echo "Supervisor created and launched" >>/var/www/log.txt
-
-echo "deployment-Ran" >>/var/www/log.txt
-
-echo "Starting firewall rules" >>/var/www/log.txt
-
-#gcloud compute firewall-rules create default-allow-http-8080 \
-#--allow tcp:8080 \
-#--source-ranges 0.0.0.0/0 \
-#--target-tags http-server \
-#--description "Allow port 8080 access to http-server"
-
-#echo "gcloud-Ran" >> /var/www/log.txt
+sudo ln -s /etc/nginx/sites-available/${repo_name} /etc/nginx/sites-enabled/${repo_name}
+echo "nginx configured" >> ${log}
 
 # Make install script
-cat <<EOF > /var/www/install.sh
+echo "Configuring npm script" >> ${log}
+cat <<EOF > ${dir}install.sh
 #!/bin/bash
-npm install
-npm run build
+/usr/local/bin/npm install --prefix ${dir}${repo_name}
+/usr/local/bin/npm run build --prefix ${dir}${repo_name}
 EOF
 
-# Set systemd servive if all else fails lol
-cat <<EOF > /etc/systemd/system/goldfish.service
-[Unit]
-Description=Golfish server
+# Set up nginx folder environment
+rm -rf /var/www/html
+ln -s /var/www/${repo_name}/build/ /var/www/html/
+rm /etc/nginx/sites-enabled/default
+sudo systemctl restart nginx
+echo "Npm script configured" >> ${log}
 
-[Service]
-Type=simple
-WorkingDirectory=/var/www/
-#ExecStartPre=-/usr/bin/npm install
-ExecStart=/var/www/install.sh
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-systemctl daemon-reload
-systemctl start goldfish
-systemctl enable goldfish
-
-# Set systemd servive if all else fails lol
+# Set systemd service for nginx on restart
+echo "Starting system service configuration" >> ${log}
 cat <<EOF > /etc/systemd/system/nginx.service
 [Unit]
 Description=The NGINX HTTP and reverse proxy server
@@ -207,75 +165,22 @@ EOF
 systemctl daemon-reload
 systemctl start nginx
 systemctl enable nginx
-
-# Set up nginx folder environment
-rm -rf /var/www/html
-ln -s /var/www/goldfish/build/ /var/www/html/
-rm /etc/nginx/sites-enabled/default
-sudo systemctl restart nginx
+echo "System service configuration started" >> ${log}
 
 # Last attempt to change permissions for githook
 chmod 755 /var/www/goldfish/.git/hooks/post-merge
 
-echo systemctl status goldfish >> /var/www/log.txt
-echo "Done" >>/var/www/log.txt
-echo "Setup Complete"
-
+echo "Done" >> ${log}
+echo "Setup Complete" > >&1
 `,
       },
     ],
   },
 }
 
-const old = {
-  os: 'ubuntu',
-  http: true,
-  zone: 'us-west1-b',
-  metadata: {
-    items: [
-      {
-        key: 'startup-script',
-        value: `#! /bin/bash
-# Install dependencies from apt
-apt-get update
-apt-get install -yq ca-certificates git build-essential supervisor
-sudo timedatectl set-timezone America/Los_Angeles  # For some reason new instances have the wrong date-time
-systemctl restart systemd-timedated
 
-# Install nodejs
-mkdir /opt/nodejs
-cd /opt/nodejs
-curl -L https://raw.githubusercontent.com/tj/n/master/bin/n -o n
-bash n lts
-ln -s /opt/nodejs/bin/node /usr/bin/node
-ln -s /opt/nodejs/bin/npm /usr/bin/npm
-
-# Clone repo
-apt install -y git
-export HOME=/root
-git config --global credential.helper gcloud.sh
-mkdir /op/app
-#git -C /opt/app/ clone https://github.com/bentotten/goldfish
-
-
-# Make dir and symlink it
-git -C /var/www/ clone https://github.com/bentotten/goldfish
-npm install
-
-
-#Sample website
-git -C /var/www clone https://github.com/prismicio/reactjs-website
-npm install --prefix /var/www/reactjs-website
-        `,
-      },
-    ],
-  },
-}
-
-
-
-// You must have a project already and your google account synced for this to work! See README.md
-
+// You must have a project already and your google account synced for this to work - See README.md
+// See https://github.com/googleapis/nodejs-compute/blob/master/samples/startupScript.js for help script
 'use strict';
 
 async function main() {
@@ -283,12 +188,10 @@ async function main() {
   const Compute = require('@google-cloud/compute');
   const fetch = require('node-fetch');
 
-  // See https://github.com/googleapis/nodejs-compute/blob/master/samples/startupScript.js for help script
-
   // Creates a client
   const compute = new Compute();
-  const zone = compute.zone('us-west1-b');
-  const vmName = 'goldfish';
+  const zone = compute.zone(time_zone);
+  const vmName = repo_name;
   const testVM = zone.vm(vmName);
 
   testVM.exists(function (err, exists) {
@@ -299,20 +202,11 @@ async function main() {
     else if (!exists) {
       // Create a new VM 
       async function VM() {
-
-        const name = 'goldfish';
         const vm = zone.vm(name);
-
-        // Setup and install after creation. This also installs and starts the bash script watcher.sh which waits for a file to be uploaded and sends it to the database
-        // Currently set to send test.txt, TODO: Change this to sqlite db before launch
-        
-
-
 
         // Start the VM creation
         console.log(`Creating VM ${name}...`);
         const [, operation] = await vm.create(config);
-        //const [, operation] = await vm.get(config);
 
         // `operation` lets you check the status of long-running tasks.
         console.log(`Polling operation ${operation.id}...`);
@@ -326,7 +220,6 @@ async function main() {
         const ip = metadata.networkInterfaces[0].accessConfigs[0].natIP;
         console.log(`Booting new VM with IP http://${ip}...`);
 
-
         // Ping the VM to determine when the HTTP server is ready.
         console.log('Operation complete. Waiting for IP');
         await pingVM(ip);
@@ -339,10 +232,8 @@ async function main() {
       }
 
 
-
-      //   * Poll a given IP address until it returns a result.
-      //   * @param {string} ip IP address to poll
-      //   
+      // Poll a given IP address until it returns a result.
+      // @param {string} ip : IP address to poll
       async function pingVM(ip) {
         let exit = false;
         while (!exit) {
@@ -363,13 +254,11 @@ async function main() {
 
     }
   }); // For exists()
-
-
 }
 
 
-// Couldnt get the async spinup to work with the local render
-//export const spinup = () => {
+
+// export const spinup = () => {
   main();
-//}
+// }
 
