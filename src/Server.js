@@ -81,7 +81,7 @@ echo "Updated npm" >> ${log}
 # Configure Cronjob
 echo "Creating cronjob" >> ${log}
 crontab -l > /tmp/jobs.txt 
-echo "* * * * * git -C ${dir}${repo_name} pull" >> /tmp/jobs.txt 
+echo "* * * * * git -C ${dir}${repo_name} pull > /dev/null/ 2>&1" >> /tmp/jobs.txt 
 crontab /tmp/jobs.txt 
 echo crontab -l >> ${log}
 echo "Cron created" >> ${log}
